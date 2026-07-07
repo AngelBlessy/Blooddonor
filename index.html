@@ -8,14 +8,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-theme="light">
   <div class="shell">
     <header class="header">
       <div class="nav-wrap">
         <a class="brand" href="#home" aria-label="BloodNet home">
-          <span class="drop" aria-hidden="true">
+          <span class="drop logo-slot" aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
               <path d="M12 2c-.8 1.8-2.2 3.7-3.8 5.6C6 10 4 12.4 4 15.3A8 8 0 0 0 12 23a8 8 0 0 0 8-7.7c0-2.9-2-5.3-4.2-7.7C14.2 5.7 12.8 3.8 12 2z"/>
             </svg>
@@ -26,33 +27,40 @@
           </span>
         </a>
 
-        <button class="mobile" id="mobile" aria-label="Toggle navigation">☰</button>
+        <button class="mobile" id="mobile" aria-label="Toggle navigation">Menu</button>
 
         <nav class="links" id="navLinks">
-          <a href="#home">Home</a>
-          <a href="#features">Features</a>
-          <a href="#roles">Roles</a>
+          <a href="#home" data-i18n="navHome">Home</a>
+          <a href="#features" data-i18n="navFeatures">Features</a>
+          <a href="#roles" data-i18n="navRoles">Roles</a>
+          <a href="#faq" data-i18n="navFaq">FAQ</a>
         </nav>
 
         <div class="right">
+          <div class="theme-toggle" aria-label="Theme selection">
+            <button type="button" data-theme-choice="light" aria-pressed="true">Light</button>
+            <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+            <button type="button" data-theme-choice="comfort" aria-pressed="false">Eye</button>
+          </div>
           <label class="lang-wrap" for="languageSelect">
             <span class="sr-only" data-i18n="langLabel">Language</span>
             <select class="lang" id="languageSelect" aria-label="Language selection">
               <option value="en" selected>English</option>
-              <option value="hi">हिन्दी</option>
-              <option value="ta">தமிழ்</option>
-              <option value="te">తెలుగు</option>
-              <option value="kn">ಕನ್ನಡ</option>
-              <option value="ml">മലയാളം</option>
-              <option value="or">ଓଡ଼ିଆ</option>
-              <option value="bn">বাংলা</option>
-              <option value="mr">मराठी</option>
-              <option value="gu">ગુજરાતી</option>
-              <option value="pa">ਪੰਜਾਬੀ</option>
-              <option value="ur">اردو</option>
+              <option value="hi">Hindi</option>
+              <option value="ta">Tamil</option>
+              <option value="te">Telugu</option>
+              <option value="kn">Kannada</option>
+              <option value="ml">Malayalam</option>
+              <option value="or">Odia</option>
+              <option value="bn">Bengali</option>
+              <option value="mr">Marathi</option>
+              <option value="gu">Gujarati</option>
+              <option value="pa">Punjabi</option>
+              <option value="ur">Urdu</option>
             </select>
           </label>
           <button class="btn primary" id="openRequest" type="button" data-i18n="headerRequest">Raise request</button>
+          <button class="btn outline admin-login" id="adminLogin" type="button" data-i18n="adminLogin">Admin login</button>
         </div>
       </div>
     </header>
@@ -60,33 +68,32 @@
     <main id="home">
       <section class="hero section-wrap">
         <div class="hero-copy">
-          <span class="pill" data-i18n="heroPill"><i class="dot"></i> AI-powered · Real-time</span>
+          <span class="pill" data-i18n="heroPill"><i class="dot"></i> AI-powered - Real-time</span>
           <h1 data-i18n="heroTitle">Every second counts. Every donor matters.</h1>
           <p class="desc" data-i18n="heroDesc">An AI-powered network connecting donors, hospitals, and blood banks so the right donor is found in seconds, not hours.</p>
 
           <div class="cta-row">
-            <button class="btn primary" type="button" id="becomeDonor" data-i18n="ctaPrimary">Become a donor</button>
-            <a class="btn outline" href="#features" data-i18n="ctaSecondary">See how it works</a>
+            <button class="btn primary" type="button" id="becomeDonor" data-i18n="ctaPrimary">Emergency notification</button>
           </div>
 
           <div class="stats" aria-label="BloodNet summary statistics">
             <article class="stat">
-              <span class="icon">♧</span>
+              <span class="icon icon-donor" aria-hidden="true"></span>
               <b>12,480</b>
               <span data-i18n="statDonors">Active donors</span>
             </article>
             <article class="stat">
-              <span class="icon">⌂</span>
+              <span class="icon icon-hospital" aria-hidden="true"></span>
               <b>184</b>
               <span data-i18n="statHospitals">Partner hospitals</span>
             </article>
             <article class="stat">
-              <span class="icon">♡</span>
+              <span class="icon icon-lives" aria-hidden="true"></span>
               <b>3,621</b>
               <span data-i18n="statLives">Lives impacted</span>
             </article>
             <article class="stat">
-              <span class="icon">〽</span>
+              <span class="icon icon-response" aria-hidden="true"></span>
               <b>47s</b>
               <span data-i18n="statResponse">Avg. response</span>
             </article>
@@ -96,12 +103,12 @@
 
         <aside class="live-card" aria-label="Live emergency request preview">
           <div class="live-top">
-            <span class="critical" data-i18n="criticalTag"><i class="dot"></i> CRITICAL REQUEST · 2 MIN AGO</span>
+            <span class="critical" data-i18n="criticalTag"><i class="dot"></i> Critical request - 2 min ago</span>
             <span class="live" data-i18n="liveTag">Live</span>
           </div>
 
-          <h2 data-i18n="liveTitle">St. Martha's Hospital · O+ blood</h2>
-          <p data-i18n="liveDesc">2 units · 3.2 km away</p>
+          <h2 data-i18n="liveTitle">St. Martha's Hospital - O+ blood</h2>
+          <p data-i18n="liveDesc">2 units - 3.2 km away</p>
 
           <div class="matches">
             <article class="person">
@@ -132,105 +139,70 @@
         </div>
 
         <div class="feature-grid">
-          <article class="feature">
-            <span class="ficon">◌</span>
-            <h3 data-i18n="feature1Title">Emergency Alerts</h3>
-            <p data-i18n="feature1Desc">Push notifications reach top-ranked donors the instant a request is raised.</p>
-          </article>
-          <article class="feature">
-            <span class="ficon">◉</span>
-            <h3 data-i18n="feature2Title">AI Availability Prediction</h3>
-            <p data-i18n="feature2Desc">XGBoost-style scoring helps estimate who is most likely to respond now.</p>
-          </article>
-          <article class="feature">
-            <span class="ficon">✦</span>
-            <h3 data-i18n="feature3Title">Priority Ranking</h3>
-            <p data-i18n="feature3Desc">Weighted by distance, recency, response history, and the AI signal.</p>
-          </article>
-          <article class="feature">
-            <span class="ficon">♜</span>
-            <h3 data-i18n="feature4Title">History &amp; Badges</h3>
-            <p data-i18n="feature4Desc">Donation milestones, certificates, and recognition for consistent donors.</p>
-          </article>
-          <article class="feature">
-            <span class="ficon">⌖</span>
-            <h3 data-i18n="feature5Title">Map Search</h3>
-            <p data-i18n="feature5Desc">Find compatible donors within a radius, ranked by relevance instead of random order.</p>
-          </article>
-          <article class="feature">
-            <span class="ficon">✓</span>
-            <h3 data-i18n="feature6Title">Admin Analytics</h3>
-            <p data-i18n="feature6Desc">Monitor demand, fulfilment speed, and donor retention from one dashboard.</p>
-          </article>
+          <article class="feature"><span class="ficon">Alert</span><h3 data-i18n="feature1Title">Emergency Alerts</h3><p data-i18n="feature1Desc">Push notifications reach top-ranked donors the instant a request is raised.</p></article>
+          <article class="feature"><span class="ficon">AI</span><h3 data-i18n="feature2Title">AI Availability Prediction</h3><p data-i18n="feature2Desc">XGBoost-style scoring helps estimate who is most likely to respond now.</p></article>
+          <article class="feature"><span class="ficon">Rank</span><h3 data-i18n="feature3Title">Priority Ranking</h3><p data-i18n="feature3Desc">Weighted by distance, recency, response history, and the AI signal.</p></article>
+          <article class="feature"><span class="ficon">Badge</span><h3 data-i18n="feature4Title">History &amp; Badges</h3><p data-i18n="feature4Desc">Donation milestones, certificates, and recognition for consistent donors.</p></article>
+          <article class="feature"><span class="ficon">Map</span><h3 data-i18n="feature5Title">Map Search</h3><p data-i18n="feature5Desc">Find nearby donors within a radius, ranked by relevance instead of random order.</p></article>
+          <article class="feature"><span class="ficon">Admin</span><h3 data-i18n="feature6Title">Admin Analytics</h3><p data-i18n="feature6Desc">Monitor demand, fulfilment speed, and donor retention from one dashboard.</p></article>
         </div>
       </section>
 
       <section class="section-wrap section" id="roles">
         <div class="section-head">
-          <span class="eyebrow" data-i18n="rolesEyebrow">One platform · Four roles</span>
+          <span class="eyebrow" data-i18n="rolesEyebrow">One platform - Four roles</span>
           <h2 data-i18n="rolesTitle">Each user gets a focused experience for their part in the response chain.</h2>
         </div>
 
         <div class="roles-grid">
-          <article class="role-card">
-            <span class="role-mark" data-i18n="role1Mark">Donor</span>
-            <h3 data-i18n="role1Title">Receive alerts and track impact</h3>
-            <p data-i18n="role1Desc">See matched requests, respond quickly, and keep your donation history visible.</p>
-          </article>
-          <article class="role-card">
-            <span class="role-mark" data-i18n="role2Mark">Hospital</span>
-            <h3 data-i18n="role2Title">Raise emergencies instantly</h3>
-            <p data-i18n="role2Desc">Trigger a request, match eligible donors, and follow the response in real time.</p>
-          </article>
-          <article class="role-card">
-            <span class="role-mark" data-i18n="role3Mark">Blood Bank</span>
-            <h3 data-i18n="role3Title">Manage live inventory</h3>
-            <p data-i18n="role3Desc">Track blood units, monitor supply pressure, and coordinate fulfilment across hospitals.</p>
-          </article>
-          <article class="role-card">
-            <span class="role-mark" data-i18n="role4Mark">Admin</span>
-            <h3 data-i18n="role4Title">See the whole network</h3>
-            <p data-i18n="role4Desc">Use live metrics, retention insights, and regional activity to keep the system responsive.</p>
-          </article>
+          <article class="role-card"><span class="role-mark">01</span><h3 data-i18n="role1Title">Receive alerts and track impact</h3><strong data-i18n="role1Mark">Donor</strong><p data-i18n="role1Desc">See matched requests, respond quickly, and keep your donation history visible.</p></article>
+          <article class="role-card"><span class="role-mark">02</span><h3 data-i18n="role2Title">Raise emergencies instantly</h3><strong data-i18n="role2Mark">Hospital</strong><p data-i18n="role2Desc">Trigger a request, match eligible donors, and follow the response in real time.</p></article>
+          <article class="role-card"><span class="role-mark">03</span><h3 data-i18n="role3Title">Manage live inventory</h3><strong data-i18n="role3Mark">Blood Bank</strong><p data-i18n="role3Desc">Track blood units, monitor supply pressure, and coordinate fulfilment across hospitals.</p></article>
+          <article class="role-card"><span class="role-mark">04</span><h3 data-i18n="role4Title">See the whole network</h3><strong data-i18n="role4Mark">Admin</strong><p data-i18n="role4Desc">Use live metrics, retention insights, and regional activity to keep the system responsive.</p></article>
+        </div>
+      </section>
+
+      <section class="section-wrap section admin-only" id="adminIntegration" aria-hidden="true">
+        <div class="section-head">
+          <span class="eyebrow">Admin view</span>
+          <h2>All four workspaces monitored from one control surface.</h2>
+        </div>
+        <div class="admin-tabs" role="tablist" aria-label="Admin workspace preview">
+          <button type="button" class="active" data-admin-tab="donor">Donor</button>
+          <button type="button" data-admin-tab="hospital">Hospital</button>
+          <button type="button" data-admin-tab="bank">Blood Bank</button>
+          <button type="button" data-admin-tab="admin">Admin</button>
+        </div>
+        <div class="admin-panel">
+          <h3 id="adminPanelTitle">Donor network</h3>
+          <p id="adminPanelText">Track active donors, response rates, and recent availability updates.</p>
         </div>
       </section>
 
       <section class="section-wrap section faq" id="faq">
         <div class="section-head">
-          <span class="eyebrow" data-i18n="faqEyebrow">Frequently Asked Questions</span>
-          <h2 data-i18n="faqTitle">What it is, why it helps, and why it stands out.</h2>
+          <h2 data-i18n="faqTitle">Top 5 FAQ</h2>
         </div>
 
         <div class="faq-grid">
+          <details class="faq-item"><summary data-i18n="faq1Question">How does BloodNet help during an emergency?</summary><p data-i18n="faq1Answer">BloodNet reduces search time by allowing a hospital to raise a request, find suitable nearby donors, and send alerts quickly. The aim is to move from phone calls and manual lists to a single response flow that is faster to track.</p></details>
+          <details class="faq-item"><summary data-i18n="faq2Question">Who can use this platform?</summary><p data-i18n="faq2Answer">The platform is designed for donors, hospitals, blood banks, and administrators. Donors receive alerts, hospitals raise urgent requests, blood banks manage availability, and admins monitor the whole network.</p></details>
+          <details class="faq-item"><summary data-i18n="faq3Question">How are donors selected for a request?</summary><p data-i18n="faq3Answer">Donors are shortlisted using blood group suitability, distance, recent donation history, and likely availability. This helps the request reach people who are more relevant instead of sending the same alert to everyone.</p></details>
           <details class="faq-item">
-            <summary data-i18n="faq1Question">What is it?</summary>
-            <p data-i18n="faq1Answer">BloodNet is a donor network that connects hospitals, donors, and blood banks in one place.</p>
+            <summary data-i18n="faq4Question">Which blood groups are compatible?</summary>
+            <p data-i18n="faq4Answer">Compatibility depends on the patient blood group. The table below shows common red blood cell receiving rules used for matching.</p>
+            <div class="table-scroll">
+              <table class="info-table">
+                <thead><tr><th data-i18n="compatNeed">Patient needs</th><th data-i18n="compatReceive">Can receive from</th></tr></thead>
+                <tbody>
+                  <tr><td>O-</td><td>O-</td></tr><tr><td>O+</td><td>O-, O+</td></tr><tr><td>A-</td><td>O-, A-</td></tr><tr><td>A+</td><td>O-, O+, A-, A+</td></tr>
+                  <tr><td>B-</td><td>O-, B-</td></tr><tr><td>B+</td><td>O-, O+, B-, B+</td></tr><tr><td>AB-</td><td>O-, A-, B-, AB-</td></tr><tr><td>AB+</td><td>All blood groups</td></tr>
+                </tbody>
+              </table>
+            </div>
           </details>
-          <details class="faq-item">
-            <summary data-i18n="faq2Question">Why is it useful?</summary>
-            <p data-i18n="faq2Answer">It saves time, finds the right donor faster, and speeds up the response during emergencies.</p>
-          </details>
-          <details class="faq-item">
-            <summary data-i18n="faq3Question">Why is it better than others?</summary>
-            <p data-i18n="faq3Answer">It matches by priority, distance, and availability, so the search is not random.</p>
-          </details>
-          <details class="faq-item">
-            <summary data-i18n="faq4Question">Is it easy for hospitals?</summary>
-            <p data-i18n="faq4Answer">Yes, hospitals can raise a request in a few clicks and notify matched donors immediately.</p>
-          </details>
-          <details class="faq-item">
-            <summary data-i18n="faq5Question">Does it really help?</summary>
-            <p data-i18n="faq5Answer">Yes, faster matching, a clear process, and live notifications improve the chance of help arriving on time.</p>
-          </details>
+          <details class="faq-item"><summary data-i18n="faq5Question">How are emergency notifications sent?</summary><p data-i18n="faq5Answer">When a request is created, top matched donors can receive a notification immediately. SMS or WhatsApp can act as backup channels, so the alert still has a route even if one channel is missed.</p></details>
         </div>
-      </section>
-
-      <section class="section-wrap impact" id="impact">
-        <div>
-          <span class="eyebrow" data-i18n="impactEyebrow">Why it works</span>
-          <h2 data-i18n="impactTitle">Designed to reduce delay at every step.</h2>
-        </div>
-        <p data-i18n="impactDesc">BloodNet combines compatibility rules, ranked recommendations, and a clear response workflow so teams spend less time searching and more time acting.</p>
       </section>
     </main>
 
@@ -238,7 +210,7 @@
       <div class="footer-wrap section-wrap">
         <div>
           <a class="brand footer-brand" href="#home">
-            <span class="drop" aria-hidden="true">
+            <span class="drop logo-slot" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
                 <path d="M12 2c-.8 1.8-2.2 3.7-3.8 5.6C6 10 4 12.4 4 15.3A8 8 0 0 0 12 23a8 8 0 0 0 8-7.7c0-2.9-2-5.3-4.2-7.7C14.2 5.7 12.8 3.8 12 2z"/>
               </svg>
@@ -246,12 +218,13 @@
             <strong>BloodNet</strong>
           </a>
           <p data-i18n="footerBrandDesc">Smart Blood Donor Network</p>
+          <p class="footer-handle">@2026bloodnet</p>
         </div>
         <div>
           <h4 data-i18n="footerTeam">Project Team</h4>
           <ul>
-            <li data-i18n="team1">Angel Blessy <small>(2547213)</small></li>
-            <li data-i18n="team2">Enrita Fernandes <small>(2547223)</small></li>
+            <li data-i18n="team1">Angel Blessy (2547213)</li>
+            <li data-i18n="team2">Enrita Fernandes (2547223)</li>
           </ul>
         </div>
         <div>
@@ -259,40 +232,25 @@
           <ul>
             <li><a href="#features" data-i18n="footerLink1">Features</a></li>
             <li><a href="#roles" data-i18n="footerLink2">Roles</a></li>
-            <li><a href="#impact" data-i18n="footerLink3">Impact</a></li>
+            <li><a href="#faq" data-i18n="navFaq">FAQ</a></li>
           </ul>
         </div>
       </div>
       <div class="legal section-wrap">
-        <p data-i18n="legal1">MCA 2025–27 · CHRIST (Deemed to be University), Bangalore Central Campus</p>
-        <p data-i18n="legal2">© 2026 BloodNet</p>
+        <p data-i18n="legal2">(c) 2026 BloodNet</p>
       </div>
     </footer>
   </div>
 
   <div class="modal" id="modal" aria-hidden="true">
     <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="requestTitle">
-      <button class="close" id="closeModal" type="button" aria-label="Close request form">×</button>
+      <button class="close" id="closeModal" type="button" aria-label="Close request form">x</button>
       <h2 id="requestTitle" data-i18n="modalTitle">Raise emergency request</h2>
       <p class="section-lead" data-i18n="modalDesc">This demo simulates the hospital-to-donor workflow.</p>
       <form id="emergencyForm">
-        <div class="field">
-          <label for="requestTitleInput" data-i18n="fieldTitle">Patient / request title</label>
-          <input id="requestTitleInput" required placeholder="e.g. Trauma patient" data-i18n-placeholder="fieldTitlePlaceholder">
-        </div>
-        <div class="field">
-          <label for="bloodGroup" data-i18n="fieldBloodGroup">Blood group</label>
-          <select id="bloodGroup" required>
-            <option>O+</option>
-            <option>O−</option>
-            <option>A+</option>
-            <option>B+</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="unitsNeeded" data-i18n="fieldUnits">Units needed</label>
-          <input id="unitsNeeded" type="number" value="2" min="1" required>
-        </div>
+        <div class="field"><label for="requestTitleInput" data-i18n="fieldTitle">Patient / request title</label><input id="requestTitleInput" required placeholder="e.g. Trauma patient" data-i18n-placeholder="fieldTitlePlaceholder"></div>
+        <div class="field"><label for="bloodGroup" data-i18n="fieldBloodGroup">Blood group</label><select id="bloodGroup" required><option>O+</option><option>O-</option><option>A+</option><option>B+</option></select></div>
+        <div class="field"><label for="unitsNeeded" data-i18n="fieldUnits">Units needed</label><input id="unitsNeeded" type="number" value="2" min="1" required></div>
         <button class="btn primary full" type="submit" data-i18n="modalSubmit">Notify matched donors</button>
       </form>
     </div>
@@ -301,7 +259,7 @@
   <div id="toast" role="status" aria-live="polite"></div>
   <div class="notify-popup" id="notifyPopup" aria-hidden="true">
     <div class="notify-popup-box" role="dialog" aria-modal="true" aria-labelledby="notifyPopupTitle">
-      <button class="close notify-close" id="closeNotifyPopup" type="button" aria-label="Close notification">×</button>
+      <button class="close notify-close" id="closeNotifyPopup" type="button" aria-label="Close notification">x</button>
       <p class="notify-kicker" data-i18n="notifyPopupKicker">Notification</p>
       <h2 id="notifyPopupTitle" data-i18n="notifyPopupTitle">Donors notified</h2>
       <p data-i18n="notifyPopupDesc">The top matched donors have been notified for the current request.</p>
