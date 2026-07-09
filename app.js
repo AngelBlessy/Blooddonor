@@ -3,10 +3,68 @@ const modalEl = document.querySelector('#modal');
 const notifyPopupEl = document.querySelector('#notifyPopup');
 const navLinks = document.querySelector('#navLinks');
 const languageSelect = document.querySelector('#languageSelect');
+const themeButton = document.querySelector('#themeButton');
 const adminLoginButton = document.querySelector('#adminLogin');
 const adminIntegration = document.querySelector('#adminIntegration');
+const profileButton = document.querySelector('#profileButton');
+const authModal = document.querySelector('#authModal');
+const registerButton = document.querySelector('#registerDonor');
+const loginButton = document.querySelector('#loginUser');
+const closeAuthModalButton = document.querySelector('#closeAuthModal');
+const registerForm = document.querySelector('#registerForm');
+const loginForm = document.querySelector('#loginForm');
+const otpForm = document.querySelector('#otpForm');
+const otpTimerEl = document.querySelector('#otpTimer');
+const otpMessageEl = document.querySelector('#otpMessage');
+const resendOtpButton = document.querySelector('#resendOtp');
+const registerPopup = document.querySelector('#registerPopup');
+const closeRegisterPopupButton = document.querySelector('#closeRegisterPopup');
+const lastDonationWrap = document.querySelector('#lastDonationWrap');
+const travelToggle = document.querySelector('#travelToggle');
+const travelModeStatement = document.querySelector('#travelModeStatement');
+const logoutButton = document.querySelector('#logoutButton');
+const profileBackButton = document.querySelector('#profileBackButton');
+const profilePage = document.querySelector('#profilePage');
+const profileTitle = document.querySelector('#profileTitle');
+const profileSubtitle = document.querySelector('#profileSubtitle');
+const profileRole = document.querySelector('#profileRole');
+const profileName = document.querySelector('#profileName');
+const profileEmail = document.querySelector('#profileEmail');
+const profilePhone = document.querySelector('#profilePhone');
+const profileBloodGroup = document.querySelector('#profileBloodGroup');
+const profileAge = document.querySelector('#profileAge');
+const profileDonationDate = document.querySelector('#profileDonationDate');
+const profileTravelStatus = document.querySelector('#profileTravelStatus');
+const travelCard = document.querySelector('#travelCard');
+const liveCounter = document.querySelector('#liveCounter');
+const registerName = document.querySelector('#registerName');
+const registerAge = document.querySelector('#registerAge');
+const registerPhone = document.querySelector('#registerPhone');
+const registerEmail = document.querySelector('#registerEmail');
+const registerPassword = document.querySelector('#registerPassword');
+const registerConfirmPassword = document.querySelector('#registerConfirmPassword');
+const registerBloodGroup = document.querySelector('#registerBloodGroup');
+const lastDonationDate = document.querySelector('#lastDonationDate');
+const registerMessage = document.querySelector('#registerMessage');
+const passwordMatchMessage = document.querySelector('#passwordMatchMessage');
+const loginEmail = document.querySelector('#loginEmail');
+const loginPassword = document.querySelector('#loginPassword');
+const otpInput = document.querySelector('#otpInput');
 let toastTimer;
 let currentLanguage = 'en';
+const themeOrder = ['light', 'dark', 'comfort'];
+const otpValidityMs = 10 * 60 * 1000;
+const storedUsersKey = 'bloodnet.users';
+const sessionKey = 'bloodnet.session';
+const otpState = {
+  code: '',
+  expiresAt: 0,
+  userKey: '',
+  mode: ''
+};
+let otpCountdownTimer;
+let users = [];
+let currentSession = null;
 
 const baseStrings = {
   navHome: 'Home',
@@ -18,8 +76,10 @@ const baseStrings = {
   headerRequest: 'Raise request',
   adminLogin: 'Admin login',
   adminLogout: 'Admin logout',
+  ctaRegister: 'Register donor',
+  ctaLogin: 'Login',
   heroPill: '<i class="dot"></i> AI-powered - Real-time',
-  heroTitle: 'Every second counts. Every donor matters.',
+  heroTitle: 'Every second counts.',
   heroDesc: 'An AI-powered network connecting donors, hospitals, and blood banks so the right donor is found in seconds, not hours.',
   ctaPrimary: 'Emergency notification',
   statDonors: 'Active donors',
@@ -32,7 +92,7 @@ const baseStrings = {
   liveDesc: '2 units - 3.2 km away',
   notifyTop: 'Notify top donors',
   featuresEyebrow: 'Built for life-or-death moments',
-  featuresTitle: 'Ten capabilities that turn a manual scramble into a coordinated response.',
+  featuresTitle: 'Ten capabilities. One coordinated response.',
   feature1Title: 'Emergency Alerts',
   feature1Desc: 'Push notifications reach top-ranked donors the instant a request is raised.',
   feature2Title: 'AI Availability Prediction',
@@ -46,7 +106,7 @@ const baseStrings = {
   feature6Title: 'Admin Analytics',
   feature6Desc: 'Monitor demand, fulfilment speed, and donor retention from one dashboard.',
   rolesEyebrow: 'One platform - Four roles',
-  rolesTitle: 'Each user gets a focused experience for their part in the response chain.',
+  rolesTitle: 'Focused experience for every role.',
   role1Title: 'Receive alerts and track impact',
   role1Mark: 'Donor',
   role1Desc: 'See matched requests, respond quickly, and keep your donation history visible.',
@@ -79,33 +139,65 @@ const baseStrings = {
   footerLinks: 'Quick Links',
   footerLink1: 'Features',
   footerLink2: 'Roles',
-  legal2: '(c) 2026 BloodNet',
   modalTitle: 'Raise emergency request',
   modalDesc: 'This demo simulates the hospital-to-donor workflow.',
-  fieldTitle: 'Patient / request title',
-  fieldTitlePlaceholder: 'e.g. Trauma patient',
+  fieldTitle: 'Patient detail',
+  fieldTitlePlaceholder: 'e.g. Patient name, ward, hospital',
   fieldBloodGroup: 'Blood group',
-  fieldUnits: 'Units needed',
+  fieldUnits: 'Quantity needed',
   modalSubmit: 'Notify matched donors',
   notifyPopupKicker: 'Notification',
   notifyPopupTitle: 'Donors notified',
   notifyPopupDesc: 'The top matched donors have been notified for the current request.',
-  toastNotify: 'Top three matched donors notified successfully.',
-  toastRequest: 'Emergency request created. Matching donors are being notified.',
-  toastAdminOn: 'Admin workspace enabled.',
-  toastAdminOff: 'Admin workspace hidden.'
+  authTitle: 'Register donor or login with OTP',
+  authSubtitle: 'Registration OTP is sent to email and phone. Login OTP is sent to email.',
+  registerTab: 'Donor registration',
+  loginTab: 'Login',
+  registerSubmit: 'Send OTP',
+  loginSubmit: 'Send OTP',
+  otpSubmit: 'Verify OTP',
+  otpHint: 'Enter the OTP sent to your email and phone.',
+  verifySuccess: 'OTP verified successfully.',
+  otpExpired: 'OTP expired. Please request a new one.',
+  profileHeading: 'Welcome back',
+  profileSubtitle: 'Your verified account details are shown below.',
+  profileAccount: 'Account details',
+  profileRoleLabel: 'Role',
+  profileNameLabel: 'Name',
+  profileEmailLabel: 'Email',
+  profilePhoneLabel: 'Phone',
+  profileBloodLabel: 'Blood group',
+  profileAgeLabel: 'Age',
+  profileDonationLabel: 'Last donation date',
+  profileTravelLabel: 'Travel mode',
+  travelCardTitle: 'Travel mode',
+  travelCardText: 'If you are travelling, you will not receive emergency notification for donation.',
+  travelOn: 'Travel mode: On',
+  travelOff: 'Travel mode: Off',
+  logoutText: 'Logout',
+  registerToast: 'Registration OTP sent to email and phone.',
+  loginToast: 'Login OTP sent to email.',
+  invalidOtp: 'Invalid OTP. Check the code and try again.',
+  duplicateUser: 'This email or phone already exists.',
+  profileLoaded: 'Profile loaded successfully.',
+  toastTravelOn: 'Travel mode enabled. Emergency notifications are paused.',
+  toastTravelOff: 'Travel mode disabled. Emergency notifications will resume.',
+  toastNoAccount: 'No matching account found.',
+  toastOtpResent: 'OTP resent.',
+  toastNotify: 'Top matched donors notified.',
+  toastRequest: 'Emergency request sent.'
 };
 
 const translations = {
   en: baseStrings,
   hi: {
-    navHome: 'होम', navFeatures: 'विशेषताएं', navRoles: 'भूमिकाएं', navFaq: 'FAQ', brandTag: 'स्मार्ट रक्तदाता नेटवर्क', langLabel: 'भाषा', headerRequest: 'अनुरोध भेजें', adminLogin: 'एडमिन लॉगिन', adminLogout: 'एडमिन लॉगआउट',
-    heroPill: '<i class="dot"></i> AI संचालित - रियल टाइम', heroTitle: 'हर सेकंड महत्वपूर्ण है। हर रक्तदाता महत्वपूर्ण है।', heroDesc: 'एक AI-संचालित नेटवर्क जो रक्तदाता, अस्पताल और रक्त बैंक को जोड़ता है ताकि सही रक्तदाता जल्दी मिल सके।', ctaPrimary: 'आपात सूचना',
+    navHome: 'होम', navFeatures: 'विशेषताएं', navRoles: 'भूमिकाएं', navFaq: 'FAQ', brandTag: 'स्मार्ट रक्तदाता नेटवर्क', langLabel: 'भाषा', headerRequest: 'अनुरोध भेजें', adminLogin: 'एडमिन लॉगिन', adminLogout: 'एडमिन लॉगआउट', ctaRegister: 'दाता पंजीकरण', ctaLogin: 'लॉगिन',
+    heroPill: '<i class="dot"></i> AI संचालित - रियल टाइम', heroTitle: 'हर सेकंड महत्वपूर्ण है।', heroDesc: 'एक AI-संचालित नेटवर्क जो रक्तदाता, अस्पताल और रक्त बैंक को जोड़ता है ताकि सही रक्तदाता जल्दी मिल सके।', ctaPrimary: 'आपात सूचना',
     statDonors: 'सक्रिय रक्तदाता', statHospitals: 'सहयोगी अस्पताल', statLives: 'प्रभावित जीवन', statResponse: 'औसत प्रतिक्रिया', criticalTag: '<i class="dot"></i> गंभीर अनुरोध - 2 मिनट पहले', liveTag: 'लाइव', notifyTop: 'शीर्ष रक्तदाताओं को सूचित करें',
     featuresEyebrow: 'आपात क्षणों के लिए बनाया गया', featuresTitle: 'एक ही प्रणाली में तेज अनुरोध, मिलान, सूचना और ट्रैकिंग।', feature1Title: 'आपात अलर्ट', feature1Desc: 'अनुरोध बनते ही उपयुक्त रक्तदाताओं तक सूचना पहुंचती है।', feature2Title: 'उपलब्धता अनुमान', feature2Desc: 'स्कोरिंग से पता चलता है कि अभी कौन जवाब दे सकता है।', feature3Title: 'प्राथमिकता क्रम', feature3Desc: 'दूरी, इतिहास और उपलब्धता के आधार पर क्रम बनाया जाता है।', feature4Title: 'इतिहास और बैज', feature4Desc: 'दान इतिहास, प्रमाणपत्र और नियमित रक्तदाताओं की पहचान।', feature5Title: 'मैप खोज', feature5Desc: 'पास के रक्तदाताओं को दूरी और प्रासंगिकता से खोजें।', feature6Title: 'एडमिन विश्लेषण', feature6Desc: 'मांग, पूर्ति गति और रक्तदाता प्रतिधारण देखें।',
     rolesEyebrow: 'एक प्लेटफॉर्म - चार भूमिकाएं', rolesTitle: 'हर उपयोगकर्ता को उसकी भूमिका के अनुसार अनुभव मिलता है।', role1Title: 'अलर्ट पाएं और प्रभाव देखें', role1Mark: 'रक्तदाता', role1Desc: 'मिले हुए अनुरोध देखें, जल्दी जवाब दें और इतिहास संभालें।', role2Title: 'तुरंत आपात अनुरोध भेजें', role2Mark: 'अस्पताल', role2Desc: 'अनुरोध बनाएं, रक्तदाताओं को मिलाएं और प्रतिक्रिया देखें।', role3Title: 'लाइव भंडार संभालें', role3Mark: 'रक्त बैंक', role3Desc: 'रक्त यूनिट, कमी और अस्पतालों के समन्वय को ट्रैक करें।', role4Title: 'पूरा नेटवर्क देखें', role4Mark: 'एडमिन', role4Desc: 'मीट्रिक और गतिविधि से नेटवर्क को सक्रिय रखें।',
     faqTitle: 'शीर्ष 5 FAQ', faq1Question: 'आपात स्थिति में BloodNet कैसे मदद करता है?', faq1Answer: 'BloodNet अस्पताल को अनुरोध बनाने, पास के उपयुक्त रक्तदाताओं को खोजने और तुरंत अलर्ट भेजने में मदद करता है। इससे फोन कॉल और मैनुअल सूची पर निर्भरता कम होती है।', faq2Question: 'इस प्लेटफॉर्म का उपयोग कौन कर सकता है?', faq2Answer: 'यह रक्तदाताओं, अस्पतालों, रक्त बैंकों और एडमिन के लिए है। हर भूमिका को अपने काम के अनुसार अलग दृश्य मिलता है।', faq3Question: 'अनुरोध के लिए रक्तदाता कैसे चुने जाते हैं?', faq3Answer: 'रक्त समूह, दूरी, हाल के दान इतिहास और संभावित उपलब्धता के आधार पर रक्तदाताओं को चुना जाता है।', faq4Question: 'कौन से रक्त समूह संगत हैं?', faq4Answer: 'संगतता मरीज के रक्त समूह पर निर्भर करती है। नीचे दी गई तालिका सामान्य लाल रक्त कोशिका प्राप्ति नियम दिखाती है।', faq5Question: 'आपात सूचनाएं कैसे भेजी जाती हैं?', faq5Answer: 'अनुरोध बनते ही शीर्ष मिलान वाले रक्तदाताओं को सूचना मिलती है। SMS या WhatsApp बैकअप चैनल हो सकते हैं।', compatNeed: 'मरीज को चाहिए', compatReceive: 'इनसे मिल सकता है',
-    footerBrandDesc: 'स्मार्ट रक्तदाता नेटवर्क', footerTeam: 'परियोजना टीम', footerLinks: 'त्वरित लिंक', footerLink1: 'विशेषताएं', footerLink2: 'भूमिकाएं', modalTitle: 'आपात अनुरोध भेजें', modalDesc: 'यह डेमो अस्पताल से रक्तदाता तक की प्रक्रिया दिखाता है।', fieldTitle: 'मरीज / अनुरोध शीर्षक', fieldTitlePlaceholder: 'जैसे ट्रॉमा मरीज', fieldBloodGroup: 'रक्त समूह', fieldUnits: 'यूनिट चाहिए', modalSubmit: 'मिले रक्तदाताओं को सूचित करें', notifyPopupKicker: 'सूचना', notifyPopupTitle: 'रक्तदाताओं को सूचना भेजी गई', notifyPopupDesc: 'वर्तमान अनुरोध के लिए शीर्ष मिलान रक्तदाताओं को सूचित कर दिया गया है।', toastNotify: 'शीर्ष तीन रक्तदाताओं को सूचना भेजी गई।', toastRequest: 'आपात अनुरोध बनाया गया। रक्तदाताओं को सूचना भेजी जा रही है।', toastAdminOn: 'एडमिन कार्यक्षेत्र चालू हुआ।', toastAdminOff: 'एडमिन कार्यक्षेत्र छिपा दिया गया।'
+    footerBrandDesc: 'स्मार्ट रक्तदाता नेटवर्क', footerTeam: 'परियोजना टीम', footerLinks: 'त्वरित लिंक', footerLink1: 'विशेषताएं', footerLink2: 'भूमिकाएं', modalTitle: 'आपात अनुरोध भेजें', modalDesc: 'यह डेमो अस्पताल से रक्तदाता तक की प्रक्रिया दिखाता है।', fieldTitle: 'मरीज / अनुरोध शीर्षक', fieldTitlePlaceholder: 'जैसे ट्रॉमा मरीज', fieldBloodGroup: 'रक्त समूह', fieldUnits: 'यूनिट चाहिए', modalSubmit: 'मिले रक्तदाताओं को सूचित करें', notifyPopupKicker: 'सूचना', notifyPopupTitle: 'रक्तदाताओं को सूचना भेजी गई', notifyPopupDesc: 'वर्तमान अनुरोध के लिए शीर्ष मिलान रक्तदाताओं को सूचित कर दिया गया है।', authTitle: 'दाता पंजीकरण या OTP लॉगिन', authSubtitle: 'OTP ईमेल और फोन दोनों पर भेजा जाएगा, और 10 मिनट तक मान्य रहेगा।', registerTab: 'दाता पंजीकरण', loginTab: 'लॉगिन', registerSubmit: 'OTP भेजें', loginSubmit: 'OTP भेजें', otpSubmit: 'OTP सत्यापित करें', otpHint: 'अपने ईमेल और फोन पर भेजा गया OTP दर्ज करें।', verifySuccess: 'OTP सफलतापूर्वक सत्यापित हुआ।', otpExpired: 'OTP समाप्त हो गया है। नया OTP मांगें।', profileHeading: 'फिर से स्वागत है', profileSubtitle: 'आपके सत्यापित खाते का विवरण नीचे दिखाया गया है।', profileAccount: 'खाता विवरण', profileRoleLabel: 'भूमिका', profileNameLabel: 'नाम', profileEmailLabel: 'ईमेल', profilePhoneLabel: 'फोन', profileBloodLabel: 'रक्त समूह', profileAgeLabel: 'आयु', profileDonationLabel: 'अंतिम दान तिथि', profileTravelLabel: 'यात्रा मोड', travelCardTitle: 'यात्रा मोड', travelCardText: 'यदि आप यात्रा कर रहे हैं, तो आपको दान के लिए आपात सूचना नहीं मिलेगी।', travelOn: 'यात्रा मोड: चालू', travelOff: 'यात्रा मोड: बंद', logoutText: 'लॉगआउट', registerToast: 'पंजीकरण OTP ईमेल और फोन पर भेजा गया।', loginToast: 'लॉगिन OTP ईमेल और फोन पर भेजा गया।', invalidOtp: 'गलत OTP। कृपया कोड जांचें।', duplicateUser: 'यह ईमेल या फोन पहले से मौजूद है।', profileLoaded: 'प्रोफाइल सफलतापूर्वक खुली।', toastTravelOn: 'यात्रा मोड चालू है। आपात सूचनाएं रोक दी गई हैं।', toastTravelOff: 'यात्रा मोड बंद है। आपात सूचनाएं फिर से चलेंगी।', toastNoAccount: 'मेल खाने वाला खाता नहीं मिला।', toastOtpResent: 'OTP दोबारा भेजा गया।'
   }
 };
 
@@ -125,9 +217,18 @@ const generatedLanguages = {
 Object.entries(generatedLanguages).forEach(([lang, labels]) => {
   translations[lang] = {
     ...baseStrings,
-    navHome: labels[0], navFeatures: labels[1], navRoles: labels[2], navFaq: 'FAQ',
-    brandTag: labels[3], ctaPrimary: labels[4], faqTitle: labels[5],
-    headerRequest: labels[4], adminLogin: baseStrings.adminLogin, adminLogout: baseStrings.adminLogout,
+    navHome: labels[0],
+    navFeatures: labels[1],
+    navRoles: labels[2],
+    navFaq: 'FAQ',
+    brandTag: labels[3],
+    ctaPrimary: labels[4],
+    faqTitle: labels[5],
+    headerRequest: labels[4],
+    adminLogin: baseStrings.adminLogin,
+    adminLogout: baseStrings.adminLogout,
+    ctaRegister: baseStrings.ctaRegister,
+    ctaLogin: baseStrings.ctaLogin,
     heroTitle: labels[4] + ' for every blood request',
     heroDesc: labels[3] + ' connects donors, hospitals, and blood banks in one place.',
     faq1Question: labels[4] + ' எப்படி உதவுகிறது? / How does it help?',
@@ -207,7 +308,7 @@ const localFaq = {
     faq4Question: 'কোন রক্তের গ্রুপ মিলবে?',
     faq4Answer: 'মিল রোগীর রক্তের গ্রুপের উপর নির্ভর করে। নিচে সাধারণ গ্রহণের নিয়ম দেখানো হয়েছে।',
     faq5Question: 'জরুরি নোটিফিকেশন কীভাবে পাঠানো হয়?',
-    faq5Answer: 'অনুরোধ তৈরি হলে সেরা মিল পাওয়া দাতাদের নোটিফিকেশন পাঠানো হয়। SMS বা WhatsApp ব্যাকআপ হতে পারে.'
+    faq5Answer: 'অনুরোধ তৈরি হলে সেরা মিল পাওয়া দাতাদের নোটিফিকেশন পাঠানো হয়। SMS বা WhatsApp ব্যাকআপ হতে পারে।'
   },
   mr: {
     heroTitle: 'प्रत्येक सेकंद महत्त्वाचा. प्रत्येक दाता महत्त्वाचा.',
@@ -242,12 +343,8 @@ const localFaq = {
     faq5Question: 'ایمرجنسی اطلاعات کیسے بھیجی جاتی ہیں؟', faq5Answer: 'درخواست بنتے ہی بہترین مطابقت رکھنے والوں کو اطلاع بھیجی جاتی ہے۔ SMS یا WhatsApp بیک اپ ہو سکتے ہیں۔'
   },
   or: {
-    heroTitle: 'ପ୍ରତ୍ୟେକ ସେକେଣ୍ଡ ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ। ପ୍ରତ୍ୟେକ ଦାତା ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ।',
-    faq1Question: 'ଜରୁରୀ ସମୟରେ BloodNet କିପରି ସହାୟତା କରେ?', faq1Answer: 'BloodNet ହସ୍ପିଟାଲକୁ ଅନୁରୋଧ ତିଆରି, ନିକଟସ୍ଥ ଯୋଗ୍ୟ ଦାତା ଖୋଜିବା ଏବଂ ଶୀଘ୍ର ସୂଚନା ପଠାଇବାରେ ସହାୟତା କରେ।',
-    faq2Question: 'ଏହି ପ୍ଲାଟଫର୍ମ କିଏ ବ୍ୟବହାର କରିପାରିବ?', faq2Answer: 'ଦାତା, ହସ୍ପିଟାଲ, ବ୍ଲଡ ବ୍ୟାଙ୍କ ଏବଂ ଏଡମିନ ପାଇଁ ଏହା ତିଆରି।',
-    faq3Question: 'ଦାତାମାନେ କିପରି ଚୟନ ହୁଅନ୍ତି?', faq3Answer: 'ରକ୍ତ ଗୋଷ୍ଠୀ, ଦୂରତା, ସମ୍ପ୍ରତି ଦାନ ଇତିହାସ ଏବଂ ଉପଲବ୍ଧତା ଆଧାରରେ ଚୟନ ହୁଏ।',
-    faq4Question: 'କେଉଁ ରକ୍ତ ଗୋଷ୍ଠୀ ସୁସଙ୍ଗତ?', faq4Answer: 'ସୁସଙ୍ଗତତା ରୋଗୀର ରକ୍ତ ଗୋଷ୍ଠୀ ଉପରେ ନିର୍ଭର କରେ। ସାଧାରଣ ନିୟମ ତଳେ ଅଛି।',
-    faq5Question: 'ଜରୁରୀ ସୂଚନା କିପରି ପଠାଯାଏ?', faq5Answer: 'ଅନୁରୋଧ ତିଆରି ହେଲେ ମିଳୁଥିବା ଦାତାମାନଙ୍କୁ ସୂଚନା ପଠାଯାଏ। SMS କିମ୍ବା WhatsApp ବ୍ୟାକଅପ ହୋଇପାରେ।'
+    heroTitle: 'ପ୍ରତ୍ୟେକ ସେକେଣ୍ଡ ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ। ପ୍ରତ୍ୟେକ ଦାତା ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ।', faq1Question: 'ଜରୁରୀ ସମୟରେ BloodNet କିପରି ସହାୟତା କରେ?', faq1Answer: 'BloodNet ହସ୍ପିଟାଲକୁ ଅନୁରୋଧ ତିଆରି, ନିକଟସ୍ଥ ଯୋଗ୍ୟ ଦାତା ଖୋଜିବା ଏବଂ ଶୀଘ୍ର ସୂଚନା ପଠାଇବାରେ ସହାୟତା କରେ।',
+    faq2Question: 'ଏହି ପ୍ଲାଟଫର୍ମ କିଏ ବ୍ୟବହାର କରିପାରିବ?', faq2Answer: 'ଦାତା, ହସ୍ପିଟାଲ, ବ୍ଲଡ ବ୍ୟାଙ୍କ ଏବଂ ଏଡମିନ ପାଇଁ ଏହା ତିଆରି।', faq3Question: 'ଦାତାମାନେ କିପରି ଚୟନ ହୁଅନ୍ତି?', faq3Answer: 'ରକ୍ତ ଗୋଷ୍ଠୀ, ଦୂରତା, ସମ୍ପ୍ରତି ଦାନ ଇତିହାସ ଏବଂ ଉପଲବ୍ଧତା ଆଧାରରେ ଚୟନ ହୁଏ।', faq4Question: 'କେଉଁ ରକ୍ତ ଗୋଷ୍ଠୀ ସୁସଙ୍ଗତ?', faq4Answer: 'ସୁସଙ୍ଗତତା ରୋଗୀର ରକ୍ତ ଗୋଷ୍ଠୀ ଉପରେ ନିର୍ଭର କରେ। ସାଧାରଣ ନିୟମ ତଳେ ଅଛି।', faq5Question: 'ଜରୁରୀ ସୂଚନା କିପରି ପଠାଯାଏ?', faq5Answer: 'ଅନୁରୋଧ ତିଆରି ହେଲେ ମିଳୁଥିବା ଦାତାମାନଙ୍କୁ ସୂଚନା ପଠାଯାଏ। SMS କିମ୍ବା WhatsApp ବ୍ୟାକଅପ ହୋଇପାରେ।'
   }
 };
 
@@ -270,7 +367,7 @@ const adminPanels = {
   },
   admin: {
     title: 'Admin analytics',
-    text: 'Use Recharts dashboards for demand trends, donor retention, fulfilment speed, and regional activity.'
+    text: 'Use dashboards for demand trends, donor retention, fulfilment speed, and regional activity.'
   }
 };
 
@@ -284,6 +381,240 @@ function showToast(message) {
 
 function strings() {
   return { ...baseStrings, ...(translations[currentLanguage] || {}) };
+}
+
+function saveUsers() {
+  window.localStorage.setItem(storedUsersKey, JSON.stringify(users));
+}
+
+function loadUsers() {
+  try {
+    users = JSON.parse(window.localStorage.getItem(storedUsersKey) || '[]');
+  } catch {
+    users = [];
+  }
+}
+
+function saveSession(session) {
+  currentSession = session;
+  window.localStorage.setItem(sessionKey, JSON.stringify(session));
+}
+
+function loadSession() {
+  try {
+    currentSession = JSON.parse(window.localStorage.getItem(sessionKey) || 'null');
+  } catch {
+    currentSession = null;
+  }
+}
+
+function normalizePhone(value) {
+  return String(value || '').replace(/\D/g, '');
+}
+
+function isFutureDate(value) {
+  if (!value) return false;
+  const selected = new Date(`${value}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return selected > today;
+}
+
+function validateUniqueUser(email, phone, ignoreKey = '') {
+  return !users.some((user) => user.key !== ignoreKey && (user.email === email || user.phone === phone));
+}
+
+function generateOtp() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+function openRegisterPopup() {
+  registerPopup?.classList.add('open');
+  registerPopup?.setAttribute('aria-hidden', 'false');
+}
+
+function closeRegisterPopup() {
+  registerPopup?.classList.remove('open');
+  registerPopup?.setAttribute('aria-hidden', 'true');
+}
+
+function hideAuthForms() {
+  registerForm?.classList.add('hidden');
+  loginForm?.classList.add('hidden');
+  otpForm?.classList.add('hidden');
+}
+
+function todayValue() {
+  const today = new Date();
+  const offset = today.getTimezoneOffset() * 60000;
+  return new Date(today.getTime() - offset).toISOString().slice(0, 10);
+}
+
+function setRegisterMessage(message = '', type = 'error') {
+  if (!registerMessage) return;
+  registerMessage.textContent = message;
+  registerMessage.dataset.type = type;
+}
+
+function updatePasswordMatchMessage() {
+  if (!passwordMatchMessage) return;
+  const password = registerPassword?.value || '';
+  const confirmPassword = registerConfirmPassword?.value || '';
+  passwordMatchMessage.textContent = '';
+  passwordMatchMessage.dataset.type = '';
+  registerConfirmPassword?.setCustomValidity('');
+  if (!password || !confirmPassword) return;
+  if (password === confirmPassword) {
+    passwordMatchMessage.textContent = 'Passwords match.';
+    passwordMatchMessage.dataset.type = 'success';
+  } else {
+    passwordMatchMessage.textContent = 'Passwords do not match.';
+    passwordMatchMessage.dataset.type = 'error';
+    registerConfirmPassword?.setCustomValidity('Passwords do not match.');
+  }
+}
+
+function resetRegistrationForm() {
+  registerForm?.reset();
+  setRegisterMessage('');
+  if (passwordMatchMessage) {
+    passwordMatchMessage.textContent = '';
+    passwordMatchMessage.dataset.type = '';
+  }
+  if (lastDonationWrap) lastDonationWrap.hidden = true;
+  if (lastDonationDate) {
+    lastDonationDate.value = '';
+    lastDonationDate.setCustomValidity('');
+    lastDonationDate.max = todayValue();
+  }
+  registerConfirmPassword?.setCustomValidity('');
+}
+
+function setAuthStep(step) {
+  hideAuthForms();
+  if (step === 'otp') {
+    otpForm?.classList.remove('hidden');
+  } else if (step === 'login') {
+    loginForm?.classList.remove('hidden');
+  } else {
+    registerForm?.classList.remove('hidden');
+  }
+}
+
+function openAuthModal(mode = 'register') {
+  if (mode === 'register') resetRegistrationForm();
+  authModal?.classList.add('open');
+  authModal?.setAttribute('aria-hidden', 'false');
+  authModal?.querySelectorAll('[data-auth-tab]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.authTab === mode);
+  });
+  setAuthStep(mode);
+}
+
+function closeAuthModal() {
+  authModal?.classList.remove('open');
+  authModal?.setAttribute('aria-hidden', 'true');
+  hideAuthForms();
+  window.clearInterval(otpCountdownTimer);
+}
+
+function closeModal() {
+  modalEl?.classList.remove('open');
+  modalEl?.setAttribute('aria-hidden', 'true');
+}
+
+function openNotifyPopup() {
+  notifyPopupEl?.classList.add('open');
+  notifyPopupEl?.setAttribute('aria-hidden', 'false');
+}
+
+function closeNotifyPopup() {
+  notifyPopupEl?.classList.remove('open');
+  notifyPopupEl?.setAttribute('aria-hidden', 'true');
+}
+
+function setTheme(theme) {
+  document.body.dataset.theme = theme;
+  if (themeButton) {
+    themeButton.setAttribute('aria-pressed', String(theme === 'light'));
+    themeButton.dataset.theme = theme;
+  }
+}
+
+function hideProfileView() {
+  if (!profilePage) return;
+  profilePage.classList.remove('open');
+  profilePage.hidden = true;
+  profilePage.setAttribute('aria-hidden', 'true');
+}
+
+function syncProfileView() {
+  if (!currentSession?.user || !profilePage) return;
+  const user = currentSession.user;
+  profileTitle.textContent = user.name || strings().profileHeading;
+  profileSubtitle.textContent = strings().profileSubtitle;
+  profileRole.textContent = user.role || 'Donor';
+  profileName.textContent = user.name || '-';
+  profileEmail.textContent = user.email || '-';
+  profilePhone.textContent = user.phone || '-';
+  profileBloodGroup.textContent = user.bloodGroup || '-';
+  profileAge.textContent = user.age ? String(user.age) : '-';
+  profileDonationDate.textContent = user.lastDonationDate || 'N/A';
+  profileTravelStatus.textContent = user.traveling ? strings().travelOn : strings().travelOff;
+  if (travelModeStatement) {
+    travelModeStatement.textContent = `Currently travel mode is ${user.traveling ? 'on' : 'off'}.`;
+  }
+  if (travelToggle) {
+    travelToggle.classList.toggle('active', Boolean(user.traveling));
+    travelToggle.setAttribute('aria-pressed', String(Boolean(user.traveling)));
+    const switchText = travelToggle.querySelector('.switch-text');
+    if (switchText) switchText.textContent = user.traveling ? 'On' : 'Off';
+  }
+  if (logoutButton) logoutButton.textContent = strings().logoutText;
+  if (travelCard) travelCard.classList.toggle('hidden', user.role !== 'Donor');
+  profilePage.classList.add('open');
+  profilePage.hidden = false;
+  profilePage.setAttribute('aria-hidden', 'false');
+}
+
+function completeLogin(user) {
+  saveSession({ userKey: user.key, user });
+  syncProfileView();
+  closeAuthModal();
+  showToast(strings().profileLoaded);
+  profilePage?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function completeRegistration(user) {
+  saveSession({ userKey: user.key, user });
+  hideProfileView();
+  closeAuthModal();
+  closeRegisterPopup();
+  openRegisterPopup();
+  showToast(strings().verifySuccess);
+}
+
+function updateLiveCounter() {
+  if (!liveCounter) return;
+  const onlineDonors = 12480 + users.length;
+  liveCounter.textContent = `${onlineDonors.toLocaleString('en-IN')} donors online`;
+}
+
+function startOtpTimer() {
+  window.clearInterval(otpCountdownTimer);
+  const tick = () => {
+    const remaining = otpState.expiresAt - Date.now();
+    if (remaining <= 0) {
+      if (otpTimerEl) otpTimerEl.textContent = '00:00';
+      window.clearInterval(otpCountdownTimer);
+      return;
+    }
+    const minutes = String(Math.floor(remaining / 60000)).padStart(2, '0');
+    const seconds = String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0');
+    if (otpTimerEl) otpTimerEl.textContent = `${minutes}:${seconds}`;
+  };
+  tick();
+  otpCountdownTimer = window.setInterval(tick, 1000);
 }
 
 function applyLanguage(language) {
@@ -305,37 +636,23 @@ function applyLanguage(language) {
     }
   });
 
-  if (adminLoginButton) {
-    adminLoginButton.textContent = document.body.classList.contains('admin-authenticated')
-      ? activeStrings.adminLogout
-      : activeStrings.adminLogin;
+  if (registerButton) registerButton.textContent = activeStrings.ctaRegister;
+  if (loginButton) loginButton.textContent = activeStrings.ctaLogin;
+  if (logoutButton) logoutButton.textContent = activeStrings.logoutText;
+  if (travelToggle && currentSession?.user) {
+    const switchText = travelToggle.querySelector('.switch-text');
+    if (switchText) switchText.textContent = currentSession.user.traveling ? 'On' : 'Off';
+  }
+  if (profileTitle && currentSession?.user) {
+    profileTitle.textContent = currentSession.user.name || activeStrings.profileHeading;
   }
 }
 
-function closeModal() {
-  modalEl?.classList.remove('open');
-  modalEl?.setAttribute('aria-hidden', 'true');
-}
-
-function openNotifyPopup() {
-  notifyPopupEl?.classList.add('open');
-  notifyPopupEl?.setAttribute('aria-hidden', 'false');
-}
-
-function closeNotifyPopup() {
-  notifyPopupEl?.classList.remove('open');
-  notifyPopupEl?.setAttribute('aria-hidden', 'true');
-}
-
-document.querySelectorAll('[data-theme-choice]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const theme = button.dataset.themeChoice || 'light';
-    document.body.dataset.theme = theme;
-    document.querySelectorAll('[data-theme-choice]').forEach((item) => {
-      item.setAttribute('aria-pressed', String(item === button));
-    });
-    showToast(`${button.textContent} theme applied.`);
-  });
+themeButton?.addEventListener('click', () => {
+  const current = document.body.dataset.theme || 'light';
+  const next = themeOrder[(themeOrder.indexOf(current) + 1) % themeOrder.length] || 'light';
+  setTheme(next);
+  showToast(`Theme: ${next}`);
 });
 
 languageSelect?.addEventListener('change', (event) => {
@@ -343,6 +660,175 @@ languageSelect?.addEventListener('change', (event) => {
   const label = event.target.selectedOptions[0]?.textContent || 'English';
   applyLanguage(language);
   showToast(`Language set to ${label}.`);
+});
+
+registerButton?.addEventListener('click', () => openAuthModal('register'));
+loginButton?.addEventListener('click', () => openAuthModal('login'));
+closeAuthModalButton?.addEventListener('click', closeAuthModal);
+authModal?.addEventListener('click', (event) => {
+  if (event.target === authModal) closeAuthModal();
+});
+
+authModal?.querySelectorAll('[data-auth-tab]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const mode = button.dataset.authTab || 'register';
+    if (mode === 'register') resetRegistrationForm();
+    authModal.querySelectorAll('[data-auth-tab]').forEach((item) => item.classList.toggle('active', item === button));
+    setAuthStep(mode);
+  });
+});
+
+registerPassword?.addEventListener('input', updatePasswordMatchMessage);
+registerConfirmPassword?.addEventListener('input', updatePasswordMatchMessage);
+
+lastDonationDate?.addEventListener('change', () => {
+  if (isFutureDate(lastDonationDate.value)) {
+    lastDonationDate.setCustomValidity('Last donation date cannot be in the future.');
+  } else {
+    lastDonationDate.setCustomValidity('');
+  }
+});
+
+if (registerForm) {
+  registerForm.addEventListener('change', () => {
+    const donatedEver = registerForm.querySelector('input[name="donatedEver"]:checked')?.value || '';
+    if (lastDonationWrap) lastDonationWrap.hidden = donatedEver !== 'yes';
+    if (donatedEver !== 'yes') {
+      lastDonationDate.value = '';
+      lastDonationDate.setCustomValidity('');
+    }
+  });
+}
+
+registerForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  setRegisterMessage('');
+  updatePasswordMatchMessage();
+  const name = registerName.value.trim();
+  const age = Number(registerAge.value);
+  const phone = normalizePhone(registerPhone.value);
+  const email = registerEmail.value.trim().toLowerCase();
+  const password = registerPassword.value;
+  const confirmPassword = registerConfirmPassword.value;
+  const bloodGroup = registerBloodGroup.value;
+  const donatedEver = registerForm.querySelector('input[name="donatedEver"]:checked')?.value || '';
+  const lastDonationValue = lastDonationDate.value;
+  const hasLastDonation = donatedEver === 'yes';
+
+  if (name.length < 3) return setRegisterMessage('Name must be at least 3 characters.');
+  if (!Number.isInteger(age) || age < 1 || age > 120) return setRegisterMessage('Enter a valid age.');
+  if (!/^[0-9]{10}$/.test(phone)) return setRegisterMessage('Enter a valid 10-digit phone number.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setRegisterMessage('Enter a valid email address.');
+  if (password.length < 8) return setRegisterMessage('Password must be at least 8 characters.');
+  if (!/(?=.*[A-Za-z])(?=.*\d)/.test(password)) return setRegisterMessage('Password must include a letter and a number.');
+  if (password !== confirmPassword) return setRegisterMessage('Passwords do not match.');
+  if (!bloodGroup) return setRegisterMessage('Select a blood group.');
+  if (!donatedEver) return setRegisterMessage('Select whether you have donated before.');
+  if (hasLastDonation && !lastDonationValue) return setRegisterMessage('Select your last donation date.');
+  if (isFutureDate(lastDonationValue)) return setRegisterMessage('Last donation date cannot be in the future.');
+  if (!validateUniqueUser(email, phone)) return setRegisterMessage(strings().duplicateUser);
+
+  const userKey = `donor:${email}`;
+  const user = {
+    key: userKey,
+    role: 'Donor',
+    name,
+    age,
+    phone,
+    email,
+    password,
+    bloodGroup,
+    donatedEver,
+    lastDonationDate: hasLastDonation ? lastDonationValue : 'N/A',
+    traveling: false
+  };
+
+  users = users.filter((entry) => entry.key !== userKey).concat(user);
+  saveUsers();
+  updateLiveCounter();
+  otpState.code = generateOtp();
+  otpState.expiresAt = Date.now() + otpValidityMs;
+  otpState.userKey = userKey;
+  otpState.mode = 'register';
+  setAuthStep('otp');
+  if (otpMessageEl) otpMessageEl.textContent = `Demo OTP: ${otpState.code}. Enter it within 10 minutes. Sent to ${email} and ${phone}.`;
+  showToast(strings().registerToast);
+  startOtpTimer();
+});
+
+loginForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const email = loginEmail.value.trim().toLowerCase();
+  const password = loginPassword.value;
+  const user = users.find((entry) => entry.email === email && entry.password === password);
+  if (!user) return showToast(strings().toastNoAccount);
+  otpState.code = generateOtp();
+  otpState.expiresAt = Date.now() + otpValidityMs;
+  otpState.userKey = user.key;
+  otpState.mode = 'login';
+  setAuthStep('otp');
+  if (otpMessageEl) otpMessageEl.textContent = `Demo OTP: ${otpState.code}. Enter it within 10 minutes. Sent to ${email}.`;
+  showToast(strings().loginToast);
+  startOtpTimer();
+});
+
+otpForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (!otpState.code || Date.now() > otpState.expiresAt) return showToast(strings().otpExpired);
+  if (normalizePhone(otpInput.value).slice(0, 6) !== otpState.code) return showToast(strings().invalidOtp);
+  const user = users.find((entry) => entry.key === otpState.userKey);
+  if (!user) return showToast(strings().toastNoAccount);
+  if (otpState.mode === 'register') {
+    completeRegistration(user);
+  } else {
+    completeLogin(user);
+    closeRegisterPopup();
+    showToast(strings().verifySuccess);
+  }
+});
+
+resendOtpButton?.addEventListener('click', () => {
+  if (!otpState.userKey) return;
+  otpState.code = generateOtp();
+  otpState.expiresAt = Date.now() + otpValidityMs;
+  if (otpMessageEl) otpMessageEl.textContent = `Demo OTP: ${otpState.code}. Enter it within 10 minutes.`;
+  startOtpTimer();
+  showToast(strings().toastOtpResent);
+});
+
+travelToggle?.addEventListener('click', () => {
+  if (!currentSession?.user) return;
+  const user = users.find((entry) => entry.key === currentSession.userKey);
+  if (!user || user.role !== 'Donor') return;
+  user.traveling = !user.traveling;
+  currentSession.user = user;
+  saveUsers();
+  saveSession(currentSession);
+  syncProfileView();
+  showToast(user.traveling ? strings().toastTravelOn : strings().toastTravelOff);
+});
+
+profileButton?.addEventListener('click', () => {
+  if (currentSession?.user) {
+    syncProfileView();
+  } else {
+    openAuthModal('login');
+  }
+});
+
+closeRegisterPopupButton?.addEventListener('click', closeRegisterPopup);
+
+registerPopup?.addEventListener('click', (event) => {
+  if (event.target === registerPopup) closeRegisterPopup();
+});
+
+profileBackButton?.addEventListener('click', hideProfileView);
+
+logoutButton?.addEventListener('click', () => {
+  window.localStorage.removeItem(sessionKey);
+  currentSession = null;
+  hideProfileView();
+  showToast(strings().logoutText);
 });
 
 document.querySelector('#notifyTop')?.addEventListener('click', () => {
@@ -361,7 +847,6 @@ document.querySelector('#openRequest')?.addEventListener('click', () => {
 });
 
 document.querySelector('#closeModal')?.addEventListener('click', closeModal);
-
 modalEl?.addEventListener('click', (event) => {
   if (event.target === modalEl) closeModal();
 });
@@ -382,19 +867,10 @@ navLinks?.querySelectorAll('a').forEach((link) => {
   });
 });
 
-adminLoginButton?.addEventListener('click', () => {
-  const isAdmin = document.body.classList.toggle('admin-authenticated');
-  adminLoginButton.textContent = isAdmin ? strings().adminLogout : strings().adminLogin;
-  adminIntegration?.setAttribute('aria-hidden', String(!isAdmin));
-  showToast(isAdmin ? strings().toastAdminOn : strings().toastAdminOff);
-});
-
 document.querySelectorAll('[data-admin-tab]').forEach((button) => {
   button.addEventListener('click', () => {
     const panel = adminPanels[button.dataset.adminTab];
-    document.querySelectorAll('[data-admin-tab]').forEach((item) => {
-      item.classList.toggle('active', item === button);
-    });
+    document.querySelectorAll('[data-admin-tab]').forEach((item) => item.classList.toggle('active', item === button));
     const title = document.querySelector('#adminPanelTitle');
     const text = document.querySelector('#adminPanelText');
     if (panel && title && text) {
@@ -409,4 +885,12 @@ notifyPopupEl?.addEventListener('click', (event) => {
   if (event.target === notifyPopupEl) closeNotifyPopup();
 });
 
+setTheme(document.body.dataset.theme || 'light');
 applyLanguage('en');
+loadUsers();
+updateLiveCounter();
+if (lastDonationDate) lastDonationDate.max = todayValue();
+loadSession();
+if (currentSession?.user) {
+  syncProfileView();
+}

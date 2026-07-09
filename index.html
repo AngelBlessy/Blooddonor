@@ -16,11 +16,7 @@
     <header class="header">
       <div class="nav-wrap">
         <a class="brand" href="#home" aria-label="BloodNet home">
-          <span class="drop logo-slot" aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-              <path d="M12 2c-.8 1.8-2.2 3.7-3.8 5.6C6 10 4 12.4 4 15.3A8 8 0 0 0 12 23a8 8 0 0 0 8-7.7c0-2.9-2-5.3-4.2-7.7C14.2 5.7 12.8 3.8 12 2z"/>
-            </svg>
-          </span>
+          <img class="brand-logo" src="bloodnet-logo.png" alt="" aria-hidden="true">
           <span>
             <strong>BloodNet</strong>
             <small data-i18n="brandTag">Smart Blood Donor Network</small>
@@ -37,15 +33,22 @@
         </nav>
 
         <div class="right">
-          <div class="theme-toggle" aria-label="Theme selection">
-            <button type="button" data-theme-choice="light" aria-pressed="true">Light</button>
-            <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
-            <button type="button" data-theme-choice="comfort" aria-pressed="false">Eye</button>
+          <div class="theme-toggle-wrap">
+            <button class="theme-toggle" type="button" id="themeButton" aria-label="Theme" title="theme" aria-pressed="true">
+              <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 3.25a.9.9 0 0 1 .9.9v1.1a.9.9 0 1 1-1.8 0v-1.1a.9.9 0 0 1 .9-.9Zm0 13.9a4.15 4.15 0 1 0 0-8.3 4.15 4.15 0 0 0 0 8.3Zm7.1-4.15a.9.9 0 0 1 .9-.9h1.1a.9.9 0 1 1 0 1.8h-1.1a.9.9 0 0 1-.9-.9ZM12 3.25a.9.9 0 0 1 .9.9v1.1a.9.9 0 1 1-1.8 0v-1.1a.9.9 0 0 1 .9-.9ZM4.9 12.1a.9.9 0 0 1-.9.9H2.9a.9.9 0 1 1 0-1.8H4a.9.9 0 0 1 .9.9Zm2.2-5.9a.9.9 0 0 1 1.27 0l.78.78a.9.9 0 1 1-1.27 1.27l-.78-.78a.9.9 0 0 1 0-1.27Zm8.5 8.5a.9.9 0 0 1 1.27 0l.78.78a.9.9 0 1 1-1.27 1.27l-.78-.78a.9.9 0 0 1 0-1.27ZM6.2 17.8a.9.9 0 0 1 0 1.27l-.78.78a.9.9 0 1 1-1.27-1.27l.78-.78a.9.9 0 0 1 1.27 0Zm11.6-11.6a.9.9 0 0 1 0 1.27l-.78.78a.9.9 0 1 1-1.27-1.27l.78-.78a.9.9 0 0 1 1.27 0ZM12 19.75a.9.9 0 0 1 .9.9v1.1a.9.9 0 1 1-1.8 0v-1.1a.9.9 0 0 1 .9-.9Z"/>
+              </svg>
+            </button>
           </div>
+          <button class="profile-button" id="profileButton" type="button" aria-label="Profile">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 12.2a4.7 4.7 0 1 0-4.7-4.7 4.7 4.7 0 0 0 4.7 4.7Zm0 2.2c-4 0-7.2 2.6-7.2 5.8v.8h14.4v-.8c0-3.2-3.2-5.8-7.2-5.8Z"/>
+            </svg>
+          </button>
           <label class="lang-wrap" for="languageSelect">
             <span class="sr-only" data-i18n="langLabel">Language</span>
             <select class="lang" id="languageSelect" aria-label="Language selection">
-              <option value="en" selected>English</option>
+              <option value="en" selected>Language</option>
               <option value="hi">Hindi</option>
               <option value="ta">Tamil</option>
               <option value="te">Telugu</option>
@@ -60,7 +63,6 @@
             </select>
           </label>
           <button class="btn primary" id="openRequest" type="button" data-i18n="headerRequest">Raise request</button>
-          <button class="btn outline admin-login" id="adminLogin" type="button" data-i18n="adminLogin">Admin login</button>
         </div>
       </div>
     </header>
@@ -69,36 +71,46 @@
       <section class="hero section-wrap">
         <div class="hero-copy">
           <span class="pill" data-i18n="heroPill"><i class="dot"></i> AI-powered - Real-time</span>
-          <h1 data-i18n="heroTitle">Every second counts. Every donor matters.</h1>
+          <h1 data-i18n="heroTitle">Every second counts.</h1>
           <p class="desc" data-i18n="heroDesc">An AI-powered network connecting donors, hospitals, and blood banks so the right donor is found in seconds, not hours.</p>
 
           <div class="cta-row">
             <button class="btn primary" type="button" id="becomeDonor" data-i18n="ctaPrimary">Emergency notification</button>
+            <button class="btn outline" type="button" id="registerDonor" data-i18n="ctaRegister">Register donor</button>
+            <button class="btn outline" type="button" id="loginUser" data-i18n="ctaLogin">Login</button>
           </div>
 
           <div class="stats" aria-label="BloodNet summary statistics">
             <article class="stat">
-              <span class="icon icon-donor" aria-hidden="true"></span>
+              <span class="icon icon-donor" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M12 4.5c2.7 2.9 4.2 5.4 4.2 7.4a4.2 4.2 0 0 1-8.4 0c0-2 1.5-4.5 4.2-7.4Z"/><path d="M8.8 13.4c-2.3.4-3.9 1.5-3.9 3.1 0 2 2.9 3.6 7.1 3.6s7.1-1.6 7.1-3.6c0-1.6-1.6-2.7-3.9-3.1"/></svg>
+              </span>
               <b>12,480</b>
               <span data-i18n="statDonors">Active donors</span>
             </article>
             <article class="stat">
-              <span class="icon icon-hospital" aria-hidden="true"></span>
+              <span class="icon icon-hospital" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M7 20V9l5-5 5 5v11"/><path d="M9.5 20h5"/><path d="M12 8v6"/><path d="M9 11h6"/></svg>
+              </span>
               <b>184</b>
               <span data-i18n="statHospitals">Partner hospitals</span>
             </article>
             <article class="stat">
-              <span class="icon icon-lives" aria-hidden="true"></span>
+              <span class="icon icon-lives" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M12 20s-7-4.4-7-10.1A3.9 3.9 0 0 1 12 7a3.9 3.9 0 0 1 7 2.9C19 15.6 12 20 12 20Z"/></svg>
+              </span>
               <b>3,621</b>
               <span data-i18n="statLives">Lives impacted</span>
             </article>
             <article class="stat">
-              <span class="icon icon-response" aria-hidden="true"></span>
+              <span class="icon icon-response" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M4 8.5c2.4-1.9 4.4-2.1 6-.5l2 2 1.6-5.3 3.4 14.8 1.7-6.4 1.3 1.4"/></svg>
+              </span>
               <b>47s</b>
               <span data-i18n="statResponse">Avg. response</span>
             </article>
           </div>
-          <p class="live-counter">Live counter</p>
+          <p class="live-counter"><span>Live counter</span><strong id="liveCounter">12,480 donors online</strong></p>
         </div>
 
         <aside class="live-card" aria-label="Live emergency request preview">
@@ -135,7 +147,7 @@
       <section class="section-wrap section" id="features">
         <div class="section-head">
           <span class="eyebrow" data-i18n="featuresEyebrow">Built for life-or-death moments</span>
-          <h2 data-i18n="featuresTitle">Ten capabilities that turn a manual scramble into a coordinated response.</h2>
+          <h2 data-i18n="featuresTitle">Ten capabilities. One coordinated response.</h2>
         </div>
 
         <div class="feature-grid">
@@ -151,7 +163,7 @@
       <section class="section-wrap section" id="roles">
         <div class="section-head">
           <span class="eyebrow" data-i18n="rolesEyebrow">One platform - Four roles</span>
-          <h2 data-i18n="rolesTitle">Each user gets a focused experience for their part in the response chain.</h2>
+          <h2 data-i18n="rolesTitle">Focused experience for every role.</h2>
         </div>
 
         <div class="roles-grid">
@@ -210,11 +222,7 @@
       <div class="footer-wrap section-wrap">
         <div>
           <a class="brand footer-brand" href="#home">
-            <span class="drop logo-slot" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                <path d="M12 2c-.8 1.8-2.2 3.7-3.8 5.6C6 10 4 12.4 4 15.3A8 8 0 0 0 12 23a8 8 0 0 0 8-7.7c0-2.9-2-5.3-4.2-7.7C14.2 5.7 12.8 3.8 12 2z"/>
-              </svg>
-            </span>
+            <img class="brand-logo footer-logo" src="bloodnet-logo.png" alt="BloodNet logo">
             <strong>BloodNet</strong>
           </a>
           <p data-i18n="footerBrandDesc">Smart Blood Donor Network</p>
@@ -236,9 +244,7 @@
           </ul>
         </div>
       </div>
-      <div class="legal section-wrap">
-        <p data-i18n="legal2">(c) 2026 BloodNet</p>
-      </div>
+      
     </footer>
   </div>
 
@@ -248,9 +254,9 @@
       <h2 id="requestTitle" data-i18n="modalTitle">Raise emergency request</h2>
       <p class="section-lead" data-i18n="modalDesc">This demo simulates the hospital-to-donor workflow.</p>
       <form id="emergencyForm">
-        <div class="field"><label for="requestTitleInput" data-i18n="fieldTitle">Patient / request title</label><input id="requestTitleInput" required placeholder="e.g. Trauma patient" data-i18n-placeholder="fieldTitlePlaceholder"></div>
-        <div class="field"><label for="bloodGroup" data-i18n="fieldBloodGroup">Blood group</label><select id="bloodGroup" required><option>O+</option><option>O-</option><option>A+</option><option>B+</option></select></div>
-        <div class="field"><label for="unitsNeeded" data-i18n="fieldUnits">Units needed</label><input id="unitsNeeded" type="number" value="2" min="1" required></div>
+        <div class="field"><label for="requestTitleInput" data-i18n="fieldTitle">Patient detail</label><input id="requestTitleInput" required placeholder="e.g. Patient name, ward, hospital" data-i18n-placeholder="fieldTitlePlaceholder"></div>
+        <div class="field"><label for="bloodGroup" data-i18n="fieldBloodGroup">Blood group</label><select id="bloodGroup" required><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div>
+        <div class="field"><label for="unitsNeeded" data-i18n="fieldUnits">Quantity needed</label><input id="unitsNeeded" type="number" value="2" min="1" step="1" required></div>
         <button class="btn primary full" type="submit" data-i18n="modalSubmit">Notify matched donors</button>
       </form>
     </div>
@@ -263,6 +269,107 @@
       <p class="notify-kicker" data-i18n="notifyPopupKicker">Notification</p>
       <h2 id="notifyPopupTitle" data-i18n="notifyPopupTitle">Donors notified</h2>
       <p data-i18n="notifyPopupDesc">The top matched donors have been notified for the current request.</p>
+    </div>
+  </div>
+
+  <div class="register-popup" id="registerPopup" aria-hidden="true">
+    <div class="register-popup-box" role="dialog" aria-modal="true" aria-labelledby="registerPopupTitle">
+      <h2 id="registerPopupTitle">Thank you so much</h2>
+      <p id="registerPopupText">Your donor registration has been saved successfully.</p>
+      <button class="btn primary full" type="button" id="closeRegisterPopup">Continue</button>
+    </div>
+  </div>
+
+  <section class="profile-page" id="profilePage" aria-hidden="true" hidden>
+    <div class="profile-shell section-wrap">
+      <button class="close profile-close" type="button" id="profileBackButton" aria-label="Close profile">x</button>
+      <div class="profile-hero">
+        <div>
+          <span class="eyebrow">Your profile</span>
+          <h2 id="profileTitle">Welcome back</h2>
+          <p id="profileSubtitle">Your verified account details are shown below.</p>
+        </div>
+        <div class="profile-actions">
+          <button class="btn outline" type="button" id="logoutButton">Logout</button>
+        </div>
+      </div>
+
+      <div class="profile-grid">
+        <article class="profile-card">
+          <h3>Account details</h3>
+          <dl class="profile-list">
+            <div><dt>Role</dt><dd id="profileRole">Donor</dd></div>
+            <div><dt>Name</dt><dd id="profileName">-</dd></div>
+            <div><dt>Email</dt><dd id="profileEmail">-</dd></div>
+            <div><dt>Phone</dt><dd id="profilePhone">-</dd></div>
+            <div class="donor-only"><dt>Blood group</dt><dd id="profileBloodGroup">-</dd></div>
+            <div class="donor-only"><dt>Age</dt><dd id="profileAge">-</dd></div>
+            <div class="donor-only"><dt>Last donation date</dt><dd id="profileDonationDate">-</dd></div>
+            <div class="donor-only"><dt>Travel mode</dt><dd id="profileTravelStatus">Off</dd></div>
+          </dl>
+        </article>
+
+        <article class="profile-card donor-only" id="travelCard">
+          <h3>Travel mode</h3>
+          <p class="profile-note">If you are travelling, you will not receive emergency notification for donation.</p>
+          <p class="travel-state" id="travelModeStatement">Currently travel mode is off.</p>
+          <button class="travel-switch" type="button" id="travelToggle" aria-pressed="false">
+            <span class="switch-knob" aria-hidden="true"></span>
+            <span class="switch-text">Off</span>
+          </button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="auth-modal" id="authModal" aria-hidden="true">
+    <div class="auth-shell" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="close auth-close" id="closeAuthModal" type="button" aria-label="Close authentication window">x</button>
+      <div class="auth-copy">
+        <span class="eyebrow">Secure access</span>
+        <h2 id="authTitle">Register donor or login with OTP</h2>
+        <p>Registration OTP is sent to email and phone. Login OTP is sent to email.</p>
+      </div>
+      <div class="auth-card">
+        <div class="auth-tabs" role="tablist" aria-label="Authentication modes">
+          <button type="button" class="active" data-auth-tab="register">Donor registration</button>
+          <button type="button" data-auth-tab="login">Login</button>
+        </div>
+
+        <form class="auth-form" id="registerForm">
+          <input type="hidden" id="registerRole" value="donor">
+          <div class="field"><label for="registerName">Name</label><input id="registerName" required minlength="3" placeholder="Full name"></div>
+          <div class="field"><label for="registerAge">Age</label><input id="registerAge" type="number" required min="1" max="120" placeholder="Age"></div>
+          <div class="field"><label for="registerPhone">Contact no</label><input id="registerPhone" type="tel" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit phone number"></div>
+          <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" required placeholder="name@example.com"></div>
+          <div class="field"><label for="registerPassword">Password</label><input id="registerPassword" type="password" required minlength="8" placeholder="Create password"></div>
+          <div class="field"><label for="registerConfirmPassword">Confirm password</label><input id="registerConfirmPassword" type="password" required minlength="8" placeholder="Re-enter password"></div>
+          <p class="form-message" id="passwordMatchMessage" aria-live="polite"></p>
+          <div class="field donor-life"><span class="field-label">Donated anytime in life</span>
+            <div class="inline-choice"><label><input type="radio" name="donatedEver" value="yes" required> Yes</label><label><input type="radio" name="donatedEver" value="no"> No</label></div>
+          </div>
+          <div class="field donor-life" id="lastDonationWrap" hidden><label for="lastDonationDate">Last donation date</label><input id="lastDonationDate" type="date"></div>
+          <div class="field"><label for="registerBloodGroup">Blood group</label><select id="registerBloodGroup" required><option value="">Select blood group</option><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div>
+          <p class="form-message" id="registerMessage" aria-live="polite"></p>
+          <button class="btn primary full" type="submit">Send OTP</button>
+        </form>
+
+        <form class="auth-form hidden" id="loginForm">
+          <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" required placeholder="name@example.com"></div>
+          <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" required placeholder="Enter password"></div>
+          <button class="btn primary full" type="submit">Send OTP</button>
+        </form>
+
+        <form class="auth-form hidden" id="otpForm">
+          <p class="auth-message" id="otpMessage">Enter the OTP sent to your email and phone.</p>
+          <div class="field"><label for="otpInput">OTP</label><input id="otpInput" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="6-digit code"></div>
+          <div class="auth-meta">
+            <span id="otpTimer">10:00</span>
+            <button class="text-button" type="button" id="resendOtp">Resend OTP</button>
+          </div>
+          <button class="btn primary full" type="submit">Verify OTP</button>
+        </form>
+      </div>
     </div>
   </div>
   <script src="app.js"></script>
