@@ -29,6 +29,9 @@
           <a href="#home" data-i18n="navHome">Home</a>
           <a href="#features" data-i18n="navFeatures">Features</a>
           <a href="#roles" data-i18n="navRoles">Roles</a>
+          <a href="#hospital" id="hospitalNavLink">Hospital</a>
+          <a href="#bloodbank" id="bloodBankNavLink">Blood Bank</a>
+          <a href="#admin" id="adminNavLink">Admin</a>
           <a href="#faq" data-i18n="navFaq">FAQ</a>
         </nav>
 
@@ -46,9 +49,9 @@
             </svg>
           </button>
           <label class="lang-wrap" for="languageSelect">
-            <span class="sr-only" data-i18n="langLabel">Language</span>
+            <span class="lang-caption" data-i18n="langLabel">Language</span>
             <select class="lang" id="languageSelect" aria-label="Language selection">
-              <option value="en" selected>Language</option>
+              <option value="en" selected>English</option>
               <option value="hi">Hindi</option>
               <option value="ta">Tamil</option>
               <option value="te">Telugu</option>
@@ -62,7 +65,6 @@
               <option value="ur">Urdu</option>
             </select>
           </label>
-          <button class="btn primary" id="openRequest" type="button" data-i18n="headerRequest">Raise request</button>
         </div>
       </div>
     </header>
@@ -119,10 +121,10 @@
             <span class="live" data-i18n="liveTag">Live</span>
           </div>
 
-          <h2 data-i18n="liveTitle">St. Martha's Hospital - O+ blood</h2>
-          <p data-i18n="liveDesc">2 units - 3.2 km away</p>
+          <h2 id="liveRequestTitle">St. Martha's Hospital - O+ blood</h2>
+          <p id="liveRequestDetails">2 units - 3.2 km away</p>
 
-          <div class="matches">
+          <div class="matches" id="liveDonorList">
             <article class="person">
               <span class="initial">A</span>
               <span class="who"><b>Arjun M.</b><small>AI prob: High</small></span>
@@ -141,6 +143,7 @@
           </div>
 
           <button class="btn primary full" id="notifyTop" type="button" data-i18n="notifyTop">Notify top donors</button>
+          <p class="live-alert-status" id="liveAlertStatus" aria-live="polite"></p>
         </aside>
       </section>
 
@@ -268,7 +271,7 @@
       <button class="close notify-close" id="closeNotifyPopup" type="button" aria-label="Close notification">x</button>
       <p class="notify-kicker" data-i18n="notifyPopupKicker">Notification</p>
       <h2 id="notifyPopupTitle" data-i18n="notifyPopupTitle">Donors notified</h2>
-      <p data-i18n="notifyPopupDesc">The top matched donors have been notified for the current request.</p>
+      <p id="notifyPopupText" data-i18n="notifyPopupDesc">The top matched donors have been notified for the current request.</p>
     </div>
   </div>
 
@@ -279,6 +282,26 @@
       <button class="btn primary full" type="button" id="closeRegisterPopup">Continue</button>
     </div>
   </div>
+
+  <section class="hospital-page" id="hospitalPage" aria-hidden="true" hidden>
+    <div class="hospital-shell section-wrap">
+      <button class="close hospital-close" type="button" id="hospitalBackButton" aria-label="Close hospital workspace">x</button>
+      <div class="hospital-hero"><div><span class="eyebrow">Workspace</span><h2>Hospital Dashboard</h2><p>Coordinate urgent blood requests, compatible donors, and response progress from one place.</p></div><button class="btn primary" type="button" id="hospitalNewRequest">Raise request</button></div>
+      <div class="hospital-stats" aria-label="Hospital request summary"><article><span>Open requests</span><strong id="hospitalOpenRequests">0</strong></article><article><span>Units needed</span><strong id="hospitalUnitsNeeded">0</strong></article><article><span>Donors matched</span><strong id="hospitalDonorsMatched">0</strong></article></div>
+      <div class="hospital-grid">
+        <article class="hospital-card"><div class="hospital-card-head"><span class="eyebrow">Emergency desk</span><h3>Raise a blood request</h3></div><form id="hospitalRequestForm" class="hospital-form"><div class="field"><label for="hospitalPatient">Patient / case reference</label><input id="hospitalPatient" required placeholder="e.g. Trauma patient, Ward 4"></div><div class="field"><label for="hospitalBloodGroup">Blood group</label><select id="hospitalBloodGroup" required><option value="">Select blood group</option><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div><div class="field"><label for="hospitalUnits">Units needed</label><input id="hospitalUnits" type="number" min="1" value="1" required></div><div class="field"><label for="hospitalPriority">Priority</label><select id="hospitalPriority" required><option value="Critical">Critical</option><option value="Urgent">Urgent</option><option value="Routine">Routine</option></select></div><button class="btn primary full" type="submit">Find and notify donors</button></form></article>
+        <article class="hospital-card"><div class="hospital-card-head"><span class="eyebrow">Live tracking</span><h3>Request status</h3></div><div class="hospital-request-list" id="hospitalRequestList" aria-live="polite"></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="hospital-page" id="bloodBankPage" aria-hidden="true" hidden>
+    <div class="hospital-shell section-wrap"><button class="close hospital-close" type="button" id="bloodBankBackButton" aria-label="Close blood bank workspace">x</button><div class="hospital-hero"><div><span class="eyebrow">Workspace</span><h2>Blood Bank Dashboard</h2><p>Manage available blood units, stock levels, and shortage alerts.</p></div></div><div class="hospital-grid"><article class="hospital-card"><span class="eyebrow">Inventory update</span><h3>Record blood stock</h3><form class="hospital-form" id="bloodBankForm"><div class="field"><label for="stockBloodGroup">Blood group</label><select id="stockBloodGroup" required><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div><div class="field"><label for="stockUnits">Available units</label><input id="stockUnits" type="number" min="0" required></div><div class="field"><label for="stockExpiry">Nearest expiry date</label><input id="stockExpiry" type="date" required></div><div class="field"><label for="stockLocation">Storage location</label><input id="stockLocation" required placeholder="e.g. Cold room A"></div><button class="btn primary full" type="submit">Update inventory</button></form></article><article class="hospital-card"><span class="eyebrow">Live stock</span><h3>Blood unit repository</h3><div class="inventory-grid" id="inventoryGrid"></div></article></div></div>
+  </section>
+
+  <section class="hospital-page" id="adminPage" aria-hidden="true" hidden>
+    <div class="hospital-shell section-wrap"><button class="close hospital-close" type="button" id="adminBackButton" aria-label="Close admin workspace">x</button><div class="hospital-hero"><div><span class="eyebrow">Network administration</span><h2>Monitor the complete response network</h2><p>Review demand, donor response, inventory pressure, and recent emergency activity.</p></div></div><div class="hospital-stats"><article><span>Registered donors</span><strong id="adminDonors">0</strong></article><article><span>Open emergencies</span><strong id="adminRequests">0</strong></article><article><span>Low-stock groups</span><strong id="adminLowStock">0</strong></article></div><div class="hospital-grid"><article class="hospital-card"><span class="eyebrow">Operational alerts</span><h3>Priority actions</h3><div class="hospital-request-list" id="adminAlertList"></div></article><article class="hospital-card"><span class="eyebrow">Activity overview</span><h3>Recent requests</h3><div class="hospital-request-list" id="adminRequestList"></div></article></div></div>
+  </section>
 
   <section class="profile-page" id="profilePage" aria-hidden="true" hidden>
     <div class="profile-shell section-wrap">
@@ -318,6 +341,11 @@
             <span class="switch-text">Off</span>
           </button>
         </article>
+        <article class="profile-card donor-only donor-alert-card" id="donorAlertCard">
+          <span class="eyebrow">Emergency alerts</span>
+          <h3>Requests you can respond to</h3>
+          <div class="donor-alert-list" id="donorAlertList" aria-live="polite"></div>
+        </article>
       </div>
     </div>
   </section>
@@ -327,40 +355,60 @@
       <button class="close auth-close" id="closeAuthModal" type="button" aria-label="Close authentication window">x</button>
       <div class="auth-copy">
         <span class="eyebrow">Secure access</span>
-        <h2 id="authTitle">Register donor or login with OTP</h2>
-        <p>Registration OTP is sent to email and phone. Login OTP is sent to email.</p>
+        <h2 id="authTitle">Register or sign in</h2>
+        <p>Verify your email and phone with OTP when registering. Sign in with your selected role, email, and password.</p>
       </div>
       <div class="auth-card">
         <div class="auth-tabs" role="tablist" aria-label="Authentication modes">
-          <button type="button" class="active" data-auth-tab="register">Donor registration</button>
+          <button type="button" class="active" data-auth-tab="register">Registration</button>
           <button type="button" data-auth-tab="login">Login</button>
         </div>
 
-        <form class="auth-form" id="registerForm">
-          <input type="hidden" id="registerRole" value="donor">
-          <div class="field"><label for="registerName">Name</label><input id="registerName" required minlength="3" placeholder="Full name"></div>
-          <div class="field"><label for="registerAge">Age</label><input id="registerAge" type="number" required min="1" max="120" placeholder="Age"></div>
-          <div class="field"><label for="registerPhone">Contact no</label><input id="registerPhone" type="tel" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit phone number"></div>
-          <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" required placeholder="name@example.com"></div>
-          <div class="field"><label for="registerPassword">Password</label><input id="registerPassword" type="password" required minlength="8" placeholder="Create password"></div>
-          <div class="field"><label for="registerConfirmPassword">Confirm password</label><input id="registerConfirmPassword" type="password" required minlength="8" placeholder="Re-enter password"></div>
+        <form class="auth-form" id="registerForm" autocomplete="off">
+          <fieldset class="role-choice" id="registerRoleChoice">
+            <legend>Register as</legend>
+            <label><input type="radio" name="registerRole" value="Donor" required> User / donor</label>
+            <label><input type="radio" name="registerRole" value="Hospital"> Hospital</label>
+            <label><input type="radio" name="registerRole" value="Blood Bank"> Blood bank</label>
+            <label><input type="radio" name="registerRole" value="Admin"> Admin</label>
+          </fieldset>
+          <div class="field"><label for="registerName">Name</label><input id="registerName" autocomplete="name" required minlength="3" placeholder="Full name"></div>
+          <div class="field"><label for="registerAge">Age</label><input id="registerAge" autocomplete="off" type="number" required min="1" max="120" placeholder="Age"></div>
+          <div class="field"><label for="registerPhone">Contact no</label><input id="registerPhone" type="tel" autocomplete="tel" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit phone number"></div>
+          <div class="field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+          <div class="field"><label for="registerPassword">Password</label><div class="password-wrap"><input id="registerPassword" autocomplete="new-password" type="password" required minlength="8" placeholder="Create password"><button class="eye-button" type="button" data-toggle-password="registerPassword" aria-label="Show password">Show</button></div></div>
+          <div class="field"><label for="registerConfirmPassword">Confirm password</label><div class="password-wrap"><input id="registerConfirmPassword" autocomplete="new-password" type="password" required minlength="8" placeholder="Re-enter password"><button class="eye-button" type="button" data-toggle-password="registerConfirmPassword" aria-label="Show password">Show</button></div></div>
           <p class="form-message" id="passwordMatchMessage" aria-live="polite"></p>
-          <div class="field donor-life"><span class="field-label">Donated anytime in life</span>
+          <div class="field donor-life role-donor"><span class="field-label">Donated anytime in life</span>
             <div class="inline-choice"><label><input type="radio" name="donatedEver" value="yes" required> Yes</label><label><input type="radio" name="donatedEver" value="no"> No</label></div>
           </div>
-          <div class="field donor-life" id="lastDonationWrap" hidden><label for="lastDonationDate">Last donation date</label><input id="lastDonationDate" type="date"></div>
-          <div class="field"><label for="registerBloodGroup">Blood group</label><select id="registerBloodGroup" required><option value="">Select blood group</option><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div>
+          <div class="field donor-life role-donor" id="lastDonationWrap" hidden><label for="lastDonationDate">Last donation date</label><input id="lastDonationDate" type="date"></div>
+          <div class="field role-donor"><label for="registerBloodGroup">Blood group</label><select id="registerBloodGroup"><option value="">Select blood group</option><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div>
           <p class="form-message" id="registerMessage" aria-live="polite"></p>
           <button class="btn primary full" type="submit">Send OTP</button>
         </form>
 
-        <form class="auth-form hidden" id="loginForm">
-          <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" required placeholder="name@example.com"></div>
-          <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" required placeholder="Enter password"></div>
-          <button class="btn primary full" type="submit">Send OTP</button>
+        <form class="auth-form hidden" id="loginForm" autocomplete="off">
+          <fieldset class="role-choice login-role-choice"><legend>Login as</legend><label><input type="radio" name="loginRole" value="Donor" required> User / donor</label><label><input type="radio" name="loginRole" value="Hospital"> Hospital</label><label><input type="radio" name="loginRole" value="Blood Bank"> Blood bank</label><label><input type="radio" name="loginRole" value="Admin"> Admin</label></fieldset>
+          <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" autocomplete="off" type="email" required placeholder="name@example.com"></div>
+          <div class="field"><label for="loginPassword">Password</label><div class="password-wrap"><input id="loginPassword" autocomplete="current-password" type="password" required placeholder="Enter password"><button class="eye-button" type="button" data-toggle-password="loginPassword" aria-label="Show password">Show</button></div></div>
+          <button class="btn primary full" type="submit">Login</button>
+          <button class="text-button" type="button" id="forgotPasswordLink">Forgot password? Reset with OTP</button>
         </form>
 
-        <form class="auth-form hidden" id="otpForm">
+        <form class="auth-form hidden" id="forgotForm" autocomplete="off">
+          <p class="auth-message">Choose the account role and enter the registered email or mobile number.</p>
+          <fieldset class="role-choice login-role-choice"><legend>Reset password for</legend><label><input type="radio" name="forgotRole" value="Donor" required> User / donor</label><label><input type="radio" name="forgotRole" value="Hospital"> Hospital</label><label><input type="radio" name="forgotRole" value="Blood Bank"> Blood bank</label><label><input type="radio" name="forgotRole" value="Admin"> Admin</label></fieldset>
+          <div class="field"><label for="forgotIdentifier">Registered email or mobile number</label><input id="forgotIdentifier" type="text" autocomplete="off" inputmode="text" required placeholder="name@example.com or 10-digit phone"></div>
+          <div class="verify-row forgot-verify-row"><button class="btn outline small" type="button" id="sendForgotOtp">Send OTP</button><input id="forgotOtpInput" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="6-digit OTP"></div>
+          <p class="verify-status" id="forgotVerifyStatus" aria-live="polite"></p>
+          <div class="field"><label for="forgotPassword">New password</label><div class="password-wrap"><input id="forgotPassword" autocomplete="new-password" type="password" required minlength="8" placeholder="New password"><button class="eye-button" type="button" data-toggle-password="forgotPassword" aria-label="Show password">Show</button></div></div>
+          <div class="field"><label for="forgotConfirmPassword">Confirm new password</label><div class="password-wrap"><input id="forgotConfirmPassword" autocomplete="new-password" type="password" required minlength="8" placeholder="Re-enter new password"><button class="eye-button" type="button" data-toggle-password="forgotConfirmPassword" aria-label="Show password">Show</button></div></div>
+          <p class="form-message" id="forgotMessage" aria-live="polite"></p>
+          <button class="btn primary full" type="submit">Reset password</button>
+        </form>
+
+        <form class="auth-form hidden" id="otpForm" autocomplete="off">
           <p class="auth-message" id="otpMessage">Enter the OTP sent to your email and phone.</p>
           <div class="field"><label for="otpInput">OTP</label><input id="otpInput" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="6-digit code"></div>
           <div class="auth-meta">

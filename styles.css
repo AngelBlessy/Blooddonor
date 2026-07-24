@@ -92,6 +92,7 @@ button {
   margin: 0 auto;
 }
 
+main,
 main > section,
 .impact {
   scroll-margin-top: 132px;
@@ -834,10 +835,10 @@ body.admin-authenticated .admin-only {
 .field input,
 .field select {
   width: 100%;
-  min-height: 40px;
+  min-height: 36px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 9px 11px;
+  padding: 8px 10px;
   color: var(--ink);
   background: var(--card-strong);
 }
@@ -953,7 +954,8 @@ body.admin-authenticated .admin-only {
 }
 
 .auth-modal,
-.profile-page {
+.profile-page,
+.hospital-page {
   display: none;
 }
 
@@ -1004,6 +1006,17 @@ body.admin-authenticated .admin-only {
   gap: 10px;
 }
 
+@media (max-height: 930px) {
+  .auth-modal.open {
+    padding: 8px;
+  }
+
+  .auth-shell {
+    transform: scale(0.92);
+    transform-origin: top center;
+  }
+}
+
 .auth-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -1017,7 +1030,7 @@ body.admin-authenticated .admin-only {
 .auth-tabs button {
   border: 0;
   border-radius: 999px;
-  padding: 8px 14px;
+  padding: 7px 12px;
   color: var(--muted);
   background: transparent;
   font-weight: 800;
@@ -1031,11 +1044,78 @@ body.admin-authenticated .admin-only {
 
 .auth-form {
   display: grid;
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 8px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--card);
+}
+
+.password-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card-strong);
+}
+
+.password-wrap input {
+  border: 0;
+  background: transparent;
+}
+
+.eye-button {
+  min-width: 48px;
+  height: 100%;
+  border: 0;
+  border-left: 1px solid var(--line);
+  color: var(--p);
+  background: transparent;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.verify-row {
+  display: grid;
+  grid-template-columns: auto minmax(76px, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.verify-row.full-row {
+  grid-column: 1 / -1;
+}
+
+.forgot-verify-row {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+}
+
+.forgot-verify-row input {
+  min-width: 0;
+}
+
+.btn.small {
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 0.78rem;
+}
+
+.verify-status {
+  min-height: 16px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.verify-status[data-type='error'] {
+  color: var(--p);
+}
+
+.verify-status[data-type='success'] {
+  color: var(--green);
 }
 
 #registerForm {
@@ -1051,6 +1131,34 @@ body.admin-authenticated .admin-only {
 #registerForm .btn {
   grid-column: span 2;
 }
+
+.role-choice {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 12px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.role-choice legend {
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.role-choice label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .84rem;
+  font-weight: 800;
+}
+
+.login-role-choice { grid-column: auto; }
 
 .form-message {
   grid-column: span 2;
@@ -1118,6 +1226,81 @@ body.admin-authenticated .admin-only {
   overflow: hidden;
   background: rgba(22, 24, 30, 0.42);
 }
+
+.hospital-page.open { display: block; position: fixed; inset: 0; z-index: 31; overflow: auto; padding: 24px 12px; background: var(--bg); }
+.hospital-shell { position: relative; display: grid; gap: 16px; }
+.hospital-close { position: fixed; top: 24px; right: max(16px, calc((100vw - 1100px) / 2)); z-index: 2; }
+.hospital-hero, .hospital-card, .hospital-stats article { border: 1px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: var(--shadow); }
+.hospital-hero { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding: 24px; }
+.hospital-hero h2 { margin: 8px 0; font-size: clamp(1.7rem, 4vw, 2.7rem); }
+.hospital-hero p { max-width: 58ch; margin: 0; color: var(--muted); }
+.hospital-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.hospital-stats article { display: grid; gap: 4px; padding: 16px; }
+.hospital-stats span { color: var(--muted); font-weight: 800; }
+.hospital-stats strong { font: 700 clamp(1.7rem, 4vw, 2.4rem)/1 Fraunces, Georgia, serif; color: var(--p); }
+.hospital-grid { display: grid; grid-template-columns: minmax(280px, .9fr) minmax(0, 1.1fr); gap: 16px; align-items: start; }
+.hospital-card { padding: 18px; }
+.hospital-card-head h3 { margin-top: 6px; font-size: 1.35rem; }
+.hospital-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+.hospital-form .field:first-child, .hospital-form .btn { grid-column: 1 / -1; }
+.hospital-request-list { display: grid; gap: 10px; margin-top: 16px; }
+.hospital-request { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-strong); }
+.hospital-request h4, .hospital-request p { margin: 0; }
+.hospital-request p { color: var(--muted); font-size: .85rem; }
+.request-priority { align-self: start; padding: 4px 8px; border-radius: 999px; color: #fff; background: var(--p); font-size: .72rem; font-weight: 900; }
+.hospital-empty { margin: 0; padding: 22px 0; color: var(--muted); text-align: center; }
+.request-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.inventory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.inventory-card { display: grid; gap: 4px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-strong); }
+.inventory-card strong { font: 700 1.35rem/1 Fraunces, Georgia, serif; color: var(--p); }.inventory-card b { font-size: 1.05rem; }.inventory-card small { color: var(--muted); }.inventory-card em { color: var(--p); font-style: normal; font-weight: 800; }.inventory-card.low-stock { border-color: color-mix(in srgb, var(--p) 45%, var(--line)); }
+
+.live-alert-status {
+  min-height: 18px;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Compact dashboard layout for hospital and blood-bank workspaces. */
+#hospitalPage .hospital-grid { grid-template-columns: 1fr; gap: 12px; }
+#hospitalPage .hospital-card { padding: 16px; }
+#hospitalPage .hospital-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+#hospitalPage .hospital-form .field:first-child, #hospitalPage .hospital-form .btn { grid-column: 1 / -1; }
+#hospitalPage .hospital-request-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+#hospitalPage .hospital-request { min-height: 0; padding: 12px; }
+#hospitalPage .hospital-hero h2, #bloodBankPage .hospital-hero h2, #adminPage .hospital-hero h2 { font-size: clamp(2rem, 4vw, 2.8rem); }
+#bloodBankPage .hospital-grid { grid-template-columns: minmax(260px, .72fr) minmax(0, 1.28fr); }
+
+.donor-alert-card { grid-column: 1 / -1; }
+.donor-alert-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.donor-alert { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-strong); }
+.donor-alert h4, .donor-alert p { margin: 0; }
+.donor-alert p { color: var(--muted); font-size: .85rem; }
+.donor-alert-actions { display: flex; gap: 8px; }
+.donor-alert-actions .btn { min-height: 34px; padding: 0 12px; font-size: .78rem; }
+
+@media (max-width: 760px) {
+  #hospitalPage .hospital-form,
+  #hospitalPage .hospital-request-list,
+  #bloodBankPage .hospital-grid,
+  .donor-alert-list { grid-template-columns: 1fr; }
+  #hospitalPage .hospital-form .field:first-child,
+  #hospitalPage .hospital-form .btn { grid-column: auto; }
+}
+
+/* Blood-bank cards are intentionally compact so the whole inventory is easy to scan. */
+#bloodBankPage .hospital-shell { gap: 12px; }
+#bloodBankPage .hospital-hero { padding: 16px 18px; }
+#bloodBankPage .hospital-hero h2 { font-size: clamp(1.45rem, 3vw, 2rem); }
+#bloodBankPage .hospital-card { padding: 14px; }
+#bloodBankPage .hospital-form { gap: 8px; margin-top: 10px; }
+#bloodBankPage .inventory-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+#bloodBankPage .inventory-card { gap: 3px; min-height: 0; padding: 10px; border-radius: 10px; }
+#bloodBankPage .inventory-card strong { font-size: 1.1rem; }
+#bloodBankPage .inventory-card b { font-size: .92rem; }
+#bloodBankPage .inventory-card small, #bloodBankPage .inventory-card em { font-size: .72rem; }
 
 .profile-shell {
   position: relative;
@@ -1398,6 +1581,10 @@ body.admin-authenticated .admin-only {
     grid-template-columns: 1fr;
   }
 
+  .hospital-grid {
+    grid-template-columns: 1fr;
+  }
+
   .auth-shell {
     overflow: auto;
   }
@@ -1505,6 +1692,40 @@ body.admin-authenticated .admin-only {
     grid-template-columns: 1fr;
   }
 
+  .hospital-hero {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .hospital-hero .btn,
+  .hospital-stats {
+    width: 100%;
+  }
+
+  .hospital-stats,
+  .hospital-form {
+    grid-template-columns: 1fr;
+  }
+
+  .hospital-form .field:first-child,
+  .hospital-form .btn {
+    grid-column: auto;
+  }
+
+  #bloodBankPage .inventory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hospital-page.open {
+    padding-top: 76px;
+  }
+
+  .hospital-close {
+    top: 68px;
+    right: 12px;
+  }
+
   .roles-grid {
     grid-template-columns: 1fr;
   }
@@ -1566,6 +1787,13 @@ body.admin-authenticated .admin-only {
   position: relative;
   display: inline-flex;
   align-items: center;
+  gap: 6px;
+}
+
+.lang-caption {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .lang-wrap::after {
