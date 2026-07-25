@@ -48,7 +48,14 @@ export function LoginForm({ onLoggedIn, onForgotPassword }: LoginFormProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="name@example.com" autoComplete="email" {...field} />
+                <Input
+                  type="email"
+                  placeholder="name@example.com"
+                  autoComplete="off"
+                  {...field}
+                  readOnly
+                  onFocus={(e) => e.target.removeAttribute('readonly')}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -62,7 +69,13 @@ export function LoginForm({ onLoggedIn, onForgotPassword }: LoginFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder="Enter password" autoComplete="current-password" {...field} />
+                <PasswordInput
+                  placeholder="Enter password"
+                  autoComplete="off"
+                  {...field}
+                  readOnly
+                  onFocus={(e) => e.target.removeAttribute('readonly')}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
