@@ -2,3 +2,12 @@
 node_modules/
 npm-debug.log*
 *.log
+
+# Build output
+client/dist/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+*.local
