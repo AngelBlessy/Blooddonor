@@ -6,8 +6,10 @@ require('dotenv').config();
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
+const publicDir = path.join(__dirname, '..', 'public');
+
 app.use(express.json({ limit: '20kb' }));
-app.use(express.static(__dirname));
+app.use(express.static(publicDir));
 
 app.post('/api/translate', async (req, res) => {
   const { target, texts } = req.body || {};
@@ -171,7 +173,7 @@ app.post('/api/send-emergency-alerts', async (req, res) => {
 });
 
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(publicDir, 'index.html'));
 });
 
 app.listen(port, () => {

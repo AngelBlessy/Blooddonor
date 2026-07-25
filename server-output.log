@@ -1,3 +1,0 @@
-BloodNet running at http://localhost:3000
-OTP email sender: bloodnet2026@gmail.com
-SMS provider not configured. Add Twilio values in .env to send mobile OTP.
